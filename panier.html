@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - Trotty - Vente et Location de Trottinettes Électriques</title>
+    <style>
+        :root {
+            --primary-blue: #0a2463;
+            --primary-yellow: #FFD700;
+            --secondary-yellow: #FFF200;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --primary-green: #4CAF50;
+            --secondary-green: #2E7D32;
+            --dark-gray: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles - Same as homepage */
+        .main-header {
+            background-color: var(--white);
+            box-shadow: 0 4px 20px rgba(10, 36, 99, 0.1);
+            padding: 1.5rem 2rem;
+            position: relative;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            max-width: 180px;
+            height: auto;
+            margin-left: -200%;
+        }
+
+        .text-logo img {
+            max-width: 180px;
+            height: auto;
+            margin-left: -250%;
+        }
+
+        /* Centered Navigation */
+        .nav-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-nav a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.7rem 1.3rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .main-nav a:hover, 
+        .main-nav a.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        /* User Actions in Header */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-left: 80%;
+        }
+
+        .user-action {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-action a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .user-action a:hover {
+            background-color: rgba(10, 36, 99, 0.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--primary-yellow);
+            color: var(--dark-gray);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Cart Page Specific Styles */
+        .cart-hero {
+            background: linear-gradient(rgba(10, 36, 99, 0.85), rgba(10, 36, 99, 0.85)), 
+                        url('https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .cart-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cart-hero p {
+            font-size: 1.2rem;
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 3rem;
+        }
+
+        .cart-items {
+            flex: 2;
+        }
+
+        .cart-summary {
+            flex: 1;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .cart-table th {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 1.2rem;
+            text-align: left;
+        }
+
+        .cart-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .cart-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-info p {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            border: none;
+            color: var(--primary-blue);
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .remove-btn {
+            color: #ff4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .summary-row.total {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .checkout-btn:hover {
+            background-color: #1a3a8f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(10, 36, 99, 0.2);
+        }
+
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping:hover {
+            color: var(--primary-yellow);
+            text-decoration: underline;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 5rem 0;
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-cart i {
+            font-size: 5rem;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+            opacity: 0.5;
+        }
+
+        .empty-cart h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .empty-cart p {
+            color: var(--dark-gray);
+            margin-bottom: 2rem;
+        }
+
+        .empty-cart .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .empty-cart .btn:hover {
+            background-color: #1a3a8f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(10, 36, 99, 0.2);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .cart-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+            
+            .nav-container {
+                position: static;
+                transform: none;
+                width: 100%;
+            }
+            
+            .main-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--white);
+                padding: 1rem;
+                display: none;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 1000;
+            }
+            
+            .main-nav.active {
+                display: block;
+            }
+            
+            .main-nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .main-nav a {
+                display: block;
+                text-align: center;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .cart-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .cart-hero p {
+                font-size: 1rem;
+            }
+            
+            .product-cell {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .product-image {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .user-actions {
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-table thead {
+                display: none;
+            }
+            
+            .cart-table tr {
+                display: block;
+                margin-bottom: 1.5rem;
+                border-bottom: 2px solid #eee;
+            }
+            
+            .cart-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .cart-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--primary-blue);
+                margin-right: 1rem;
+            }
+            
+            .quantity-control {
+                justify-content: space-between;
+                width: 100%;
+            }
+            
+            .empty-cart {
+                padding: 3rem 1.5rem;
+            }
+            
+            .empty-cart i {
+                font-size: 3rem;
+            }
+            
+            .empty-cart h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <div class="logo"><img src="trotty  logo grand-04.png" alt="Trotty Logo"></div>
+                <div class="text-logo"><img src="logotext.png" alt="Trotty"></div>
+            </div>
+            
+            <div class="nav-container">
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="paged'aceuille.html">Accueil</a></li>
+                        <li><a href="sell.html">Acheter</a></li>
+                        <li><a href="location.html">Louer</a></li>
+                        <li><a href="piece.html">Pièces</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <div class="user-actions">
+                <div class="user-action">
+                    <a href="panier.html" class="active">
+                        <i class="fas fa-shopping-cart icon"></i>
+                        <span class="text">Panier</span>
+                        <span class="cart-count">3</span>
+                    </a>
+                </div>
+                <div class="user-action">
+                    <a href="login.html">
+                        <i class="fas fa-user icon"></i>
+                        <span class="text">Connexion</span>
+                    </a>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+    
+    <section class="cart-hero">
+        <h1>Votre Panier</h1>
+        <p>Revoyez vos articles avant de passer à la caisse</p>
+    </section>
+    
+    <div class="cart-container">
+        <div class="cart-items">
+            <!-- Cart with items -->
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Produit">
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro X">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Trotty Pro X</h4>
+                                    <p>Couleur: Bleu</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Prix" class="price">1 299€</td>
+                        <td data-label="Quantité">
+                            <div class="quantity-control">
+                                <button class="quantity-btn">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1">
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </td>
+                        <td data-label="Total" class="price">1 299€</td>
+                        <td>
+                            <button class="remove-btn" title="Supprimer">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="Produit">
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1624623278313-a930126a11c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Trotty Lite">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Trotty Lite</h4>
+                                    <p>Couleur: Noir</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Prix" class="price">499€</td>
+                        <td data-label="Quantité">
+                            <div class="quantity-control">
+                                <button class="quantity-btn">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1">
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </td>
+                        <td data-label="Total" class="price">499€</td>
+                        <td>
+                            <button class="remove-btn" title="Supprimer">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="Produit">
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2089&q=80" alt="Batterie de rechange">
+                                </div>
+                                <div class="product-info">
+                                    <h4>Batterie de rechange</h4>
+                                    <p>Compatible avec Trotty Pro X</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Prix" class="price">199€</td>
+                        <td data-label="Quantité">
+                            <div class="quantity-control">
+                                <button class="quantity-btn">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1">
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </td>
+                        <td data-label="Total" class="price">199€</td>
+                        <td>
+                            <button class="remove-btn" title="Supprimer">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty cart state (hidden by default) -->
+            <!-- <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Votre panier est vide</h3>
+                <p>Parcourez notre catalogue et trouvez la trottinette parfaite pour vous</p>
+                <a href="sell.html" class="btn">Voir nos produits</a>
+            </div> -->
+        </div>
+        
+        <div class="cart-summary">
+            <div class="summary-card">
+                <h3>Résumé de la commande</h3>
+                
+                <div class="summary-row">
+                    <span>Sous-total</span>
+                    <span>1 997€</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Livraison</span>
+                    <span>Gratuite</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Remise</span>
+                    <span>-50€</span>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>1 947€</span>
+                </div>
+                
+                <button class="checkout-btn">Passer la commande</button>
+                
+                <a href="sell.html" class="continue-shopping">
+                    <i class="fas fa-arrow-left"></i> Continuer vos achats
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.main-nav').classList.toggle('active');
+        });
+
+        // Quantity controls
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('.quantity-input');
+                let value = parseInt(input.value);
+                
+                if (this.textContent === '+' && value < 10) {
+                    input.value = value + 1;
+                } else if (this.textContent === '-' && value > 1) {
+                    input.value = value - 1;
+                }
+                
+                // Here you would update the cart total in a real implementation
+            });
+        });
+
+        // Remove item
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr');
+                row.remove();
+                
+                // Here you would update the cart summary in a real implementation
+            });
+        });
+    </script>
+</body>
+</html>

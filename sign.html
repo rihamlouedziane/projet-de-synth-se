@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Trotty</title>
+    <link rel="stylesheet" href="login.css"> <!-- Using the same CSS file -->
+</head>
+<body>
+    <header>
+        <div class="logo"><img src="trotty  logo grand-04.png" alt="Trotty Logo"></div>
+        <div class="title"><img src="trotty [Récupéré]-02-02.png" alt="Trotty"></div>
+    </header>
+    <div class="body">
+        <form action="signup.php" method="post">
+            <h2>Create Account</h2>
+            
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" placeholder="Full Name" name="name" id="name" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" placeholder="Email" name="email" id="email" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" placeholder="Password" name="password" id="password" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" placeholder="Confirm Password" name="confirm-password" id="confirm-password" required>
+            </div>
+            
+            <button type="submit">Sign Up</button>
+            
+            <div class="login-link">
+                <p>Already have an account? <a href="login.html">Log in</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm-password');
+        const matchIndicator = document.createElement('div');
+        matchIndicator.className = 'password-match';
+        confirmPassword.parentNode.appendChild(matchIndicator);
+        
+        function validatePassword() {
+            if (password.value !== confirmPassword.value) {
+                matchIndicator.textContent = 'Passwords do not match';
+                matchIndicator.classList.add('invalid');
+                matchIndicator.classList.remove('valid');
+            } else {
+                matchIndicator.textContent = 'Passwords match';
+                matchIndicator.classList.add('valid');
+                matchIndicator.classList.remove('invalid');
+            }
+        }
+        
+        password.addEventListener('input', validatePassword);
+        confirmPassword.addEventListener('input', validatePassword);
+    });
+    </script>
