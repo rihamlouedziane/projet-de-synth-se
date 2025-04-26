@@ -1,0 +1,411 @@
+/* Extra Large Electric Scooter Login/Signup Form */
+:root {
+    --primary-blue: #0a2463;
+    --primary-yellow: #FFD700;
+    --secondary-yellow: #FFF200;
+    --white: #ffffff;
+    --light-gray: #f8f9fa;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light-gray);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(10, 36, 99, 0.1) 0%, transparent 20%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+  
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.2rem;
+    background-color: var(--white);
+    box-shadow: 0 2px 12px rgba(10, 36, 99, 0.1);
+    text-align: center;
+    height: 100px;
+    width: 100%;
+    position: relative;
+  }
+  
+  .title {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-right: 150px;
+  }
+  
+  .title img {
+    max-width: 300px;
+    max-height: 200px;
+    transition: transform 0.3s ease;
+  }
+  
+  header > img {
+    max-width: 400px;
+    max-height: 150px;
+    transition: transform 0.3s ease;
+  }
+  
+  header img:hover,
+  .title img:hover,
+  .logo img:hover {
+    transform: scale(1.05);
+  }
+  
+  .logo img {
+    max-width: 150px;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  
+header img:hover,
+.title img:hover,
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+.logo img {
+  max-width: 150px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding: 3rem;
+    position: relative;
+}
+
+.body::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230a2463"><path d="M19 14a3 3 0 0 0-3 3h-3a3 3 0 0 0-3-3v-2h8v2zm-9-2H8V9h2v3zm5-3h2v2h-2V9z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    bottom: 10%;
+    left: 10%;
+    z-index: -1;
+}
+
+form {
+    background-color: var(--white);
+    padding: 4rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(10, 36, 99, 0.2);
+    width: 100%;
+    max-width: 650px;
+    min-width: 500px;
+    border-top: 8px solid var(--primary-yellow);
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px rgba(10, 36, 99, 0.25);
+}
+
+form::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--primary-yellow));
+}
+
+h2 {
+    color: var(--primary-blue);
+    margin-bottom: 2.5rem;
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.input-group {
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+
+/* Unified input styling for all input types */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 1.8rem 1.8rem 1.8rem 5rem;
+    border: 3px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+    background-color: var(--light-gray);
+    height: 75px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 5px rgba(10, 36, 99, 0.1);
+    outline: none;
+}
+
+/* Input icons */
+input[type="text"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="%230a2463"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: 1.8rem center;
+    background-size: 1.8rem;
+}
+
+input[type="email"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="%230a2463"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: 1.8rem center;
+    background-size: 1.8rem;
+}
+
+input[type="password"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="%230a2463"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: 1.8rem center;
+    background-size: 1.8rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button {
+    width: 100%;
+    padding: 1.8rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue));
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    height: 75px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, var(--primary-blue), #0d2e7a);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px rgba(10, 36, 99, 0.3);
+}
+
+.forget-password,
+.login-link {
+    text-align: center;
+    margin: 2.5rem auto 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.forget-password a,
+.login-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.5rem 1rem;
+}
+
+.forget-password a::after,
+.login-link a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 4px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-yellow);
+    transition: width 0.3s ease;
+}
+
+.forget-password a:hover::after,
+.login-link a:hover::after {
+    width: 100%;
+    left: 0;
+    transform: none;
+}
+
+/* Password match indicator */
+.password-match {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    display: none;
+}
+
+.password-match.valid {
+    color: green;
+    display: block;
+}
+
+.password-match.invalid {
+    color: red;
+    display: block;
+}
+
+/* Signup Section Styles */
+.signup {
+    text-align: center;
+    margin-top: 2rem;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(10, 36, 99, 0.1);
+    width: 100%;
+    max-width: 650px;
+    min-width: 500px;
+    border-top: 4px solid var(--primary-yellow);
+}
+
+.signup p {
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+    margin-bottom: 0;
+}
+
+.signup a {
+    color: var(--primary-blue);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.signup a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--primary-blue);
+    transition: width 0.3s ease;
+}
+
+.signup a:hover {
+    color: var(--primary-blue);
+}
+
+.signup a:hover::after {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .body {
+        padding: 2rem;
+    }
+    
+    form, .signup {
+        padding: 3rem;
+        max-width: 95%;
+        min-width: unset;
+        border-radius: 15px;
+    }
+    
+    h2 {
+        font-size: 2.2rem;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        padding: 1.5rem 1.5rem 1.5rem 4.5rem;
+        font-size: 1.2rem;
+        height: 65px;
+    }
+    
+    button {
+        padding: 1.5rem;
+        font-size: 1.2rem;
+        height: 65px;
+    }
+    
+    label {
+        font-size: 1.1rem;
+    }
+    
+    .forget-password a,
+    .login-link a,
+    .signup p {
+        font-size: 1.1rem;
+    }
+    
+    .body::before {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    form, .signup {
+        padding: 2.5rem 1.5rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+        font-size: 1rem;
+        height: 55px;
+    }
+    
+    button {
+        padding: 1.2rem;
+        font-size: 1rem;
+        height: 55px;
+    }
+    
+    .signup p {
+        font-size: 1rem;
+    }
+}

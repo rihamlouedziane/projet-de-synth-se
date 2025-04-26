@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trotty - Vente et Location de Trottinettes Électriques</title>
+ 
+    <style>
+        
+
+        body {
+            background-color: var(--light-gray);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+       
+
+        /* Main Content Styles - UPDATED FOR FULL-WIDTH BUTTONS */
+        .action-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 0; /* Changed from 3rem 2rem */
+            background: linear-gradient(135deg, var(--light-gray) 0%, #f0f2f5 100%);
+            gap: 2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            padding: 0 2rem; /* Added container padding */
+        }
+
+        .action-btn {
+            flex: 1;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            border-radius: 25px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%; /* Ensure full width */
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .btn-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .btn-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .btn-icon {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover .btn-icon {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .sale-btn {
+            background: linear-gradient(135deg, var(--primary-blue), #1a3a8f);
+            background-image: url('https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .rent-btn {
+            background: linear-gradient(135deg, var(--primary-yellow), var(--secondary-yellow));
+            background-image: url('https://images.unsplash.com/photo-1621891337563-85a8b4b5dc25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .rent-btn .btn-icon {
+            color: var(--primary-yellow);
+        }
+
+        /* Updated Parts Button Section - Now full width */
+        .parts-btn-section {
+            width: 100%;
+            padding: 0 2rem; /* Match action-buttons padding */
+        }
+
+        .parts-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-height: 120px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background-image: url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2089&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .parts-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .parts-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .parts-btn .btn-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .parts-btn .btn-content p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .parts-btn .btn-icon {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+            color: var(--primary-green);
+        }
+
+        /* Best Sellers Section */
+        .best-sellers {
+            padding: 4rem 2rem;
+            background-color: var(--white);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-yellow);
+            color: var(--dark-gray);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .product-specs {
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .spec-item i {
+            margin-right: 0.5rem;
+            color: var(--primary-blue);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #1a3a8f;
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        /* Customer Reviews Section */
+        .reviews-section {
+            padding: 4rem 2rem;
+            background-color: var(--light-gray);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .review-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1.5rem;
+        }
+
+        .reviewer-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .review-date {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .star-rating {
+            color: var(--primary-yellow);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-content {
+            line-height: 1.6;
+            color: var(--dark-gray);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .action-buttons {
+                flex-direction: column;
+                padding: 0 1.5rem; /* Adjusted for mobile */
+            }
+            
+            .main-nav a {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+            }
+
+            .user-actions {
+                gap: 1rem;
+            }
+
+            .user-action a span.text {
+                display: none;
+            }
+
+            .user-action a {
+                padding: 0.5rem;
+            }
+
+            .reviews-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+            
+            .nav-container {
+                position: static;
+                transform: none;
+                width: 100%;
+            }
+            
+            .main-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--white);
+                padding: 1rem;
+                display: none;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 1000;
+            }
+            
+            .main-nav.active {
+                display: block;
+            }
+            
+            .main-nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .main-nav a {
+                display: block;
+                text-align: center;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .action-btn {
+                min-height: 250px;
+                padding: 2rem;
+            }
+            
+            .parts-btn {
+                min-height: 100px;
+                padding: 1rem;
+            }
+            
+            .btn-content h2 {
+                font-size: 2rem;
+            }
+            
+            .logo img,
+            .text-logo img {
+                max-width: 140px;
+            }
+
+            .best-sellers,
+            .reviews-section {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .user-actions {
+                margin-left: auto;
+            }
+
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .review-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<?php include('../layout/header.php'); ?>
+    
+    <section class="action-section">
+        <div class="action-buttons">
+            <a href="sell.html" class="action-btn sale-btn">
+                <div class="btn-content">
+                    <h2>Acheter</h2>
+                    <p>Possédez votre propre trottinette électrique haut de gamme</p>
+                    <span class="btn-icon">Voir les modèles</span>
+                </div>
+            </a>
+            
+            <a href="location.html" class="action-btn rent-btn">
+                <div class="btn-content">
+                    <h2>Louer</h2>
+                    <p>Essai avant achat ou location courte durée</p>
+                    <span class="btn-icon">Découvrir l'offre</span>
+                </div>
+            </a>
+        </div>
+        
+        <div class="parts-btn-section">
+            <a href="piece.html" class="parts-btn">
+                <div class="btn-content">
+                    <h2>Pièces & Accessoires</h2>
+                    <p>Trouvez toutes les pièces détachées pour votre trottinette</p>
+                    <span class="btn-icon">Explorer le catalogue</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="best-sellers">
+        <div class="section-header">
+            <h2>Nos Best-Sellers</h2>
+            <p>Découvrez les trottinettes électriques les plus populaires de notre gamme, choisies par des milliers de clients satisfaits.</p>
+        </div>
+        
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro X">
+                    <span class="product-badge">Best Seller</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Trotty Pro X</h3>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <i>⚡</i> 45 km/h - Autonomie 60km
+                        </div>
+                        <div class="spec-item">
+                            <i>⏱️</i> Charge rapide 4h
+                        </div>
+                        <div class="spec-item">
+                            <i>⚖️</i> 15 kg - Portée 120kg
+                        </div>
+                    </div>
+                    <div class="product-price">1 299€</div>
+                    <div class="product-actions">
+                        <a href="#" class="btn btn-primary">Acheter</a>
+                        <a href="#" class="btn btn-secondary">Détails</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty City">
+                    <span class="product-badge">Économique</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Trotty City</h3>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <i>⚡</i> 25 km/h - Autonomie 35km
+                        </div>
+                        <div class="spec-item">
+                            <i>⏱️</i> Charge rapide 3h
+                        </div>
+                        <div class="spec-item">
+                            <i>⚖️</i> 12 kg - Portée 100kg
+                        </div>
+                    </div>
+                    <div class="product-price">699€</div>
+                    <div class="product-actions">
+                        <a href="#" class="btn btn-primary">Acheter</a>
+                        <a href="#" class="btn btn-secondary">Détails</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1621891337563-85a8b4b5dc25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Adventure">
+                    <span class="product-badge">Tout-terrain</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Trotty Adventure</h3>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <i>⚡</i> 40 km/h - Autonomie 50km
+                        </div>
+                        <div class="spec-item">
+                            <i>⏱️</i> Charge rapide 5h
+                        </div>
+                        <div class="spec-item">
+                            <i>⚖️</i> 18 kg - Portée 150kg
+                        </div>
+                    </div>
+                    <div class="product-price">1 099€</div>
+                    <div class="product-actions">
+                        <a href="#" class="btn btn-primary">Acheter</a>
+                        <a href="#" class="btn btn-secondary">Détails</a>
+                    </div>
+                </div>
+            </div>
+             <!-- Product 3 -->
+             <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1621891337563-85a8b4b5dc25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Adventure">
+                    <span class="product-badge">Tout-terrain</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Trotty Adventure</h3>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <i>⚡</i> 40 km/h - Autonomie 50km
+                        </div>
+                        <div class="spec-item">
+                            <i>⏱️</i> Charge rapide 5h
+                        </div>
+                        <div class="spec-item">
+                            <i>⚖️</i> 18 kg - Portée 150kg
+                        </div>
+                    </div>
+                    <div class="product-price">1 099€</div>
+                    <div class="product-actions">
+                        <a href="#" class="btn btn-primary">Acheter</a>
+                        <a href="#" class="btn btn-secondary">Détails</a>
+                    </div>
+                </div>
+            </div>
+             <!-- Product 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1621891337563-85a8b4b5dc25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Adventure">
+                    <span class="product-badge">Tout-terrain</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Trotty Adventure</h3>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <i>⚡</i> 40 km/h - Autonomie 50km
+                        </div>
+                        <div class="spec-item">
+                            <i>⏱️</i> Charge rapide 5h
+                        </div>
+                        <div class="spec-item">
+                            <i>⚖️</i> 18 kg - Portée 150kg
+                        </div>
+                    </div>
+                    <div class="product-price">1 099€</div>
+                    <div class="product-actions">
+                        <a href="#" class="btn btn-primary">Acheter</a>
+                        <a href="#" class="btn btn-secondary">Détails</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1624623278313-a930126a11c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Trotty Lite">
+                    <span class="product-badge">Compacte</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Trotty Lite</h3>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <i>⚡</i> 20 km/h - Autonomie 25km
+                        </div>
+                        <div class="spec-item">
+                            <i>⏱️</i> Charge rapide 2h
+                        </div>
+                        <div class="spec-item">
+                            <i>⚖️</i> 9 kg - Portée 80kg
+                        </div>
+                    </div>
+                    <div class="product-price">499€</div>
+                    <div class="product-actions">
+                        <a href="#" class="btn btn-primary">Acheter</a>
+                        <a href="#" class="btn btn-secondary">Détails</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews Section -->
+    <section class="reviews-section">
+        <div class="section-header">
+            <h2>Avis de nos clients</h2>
+            <p>Découvrez ce que nos clients pensent de nos produits et services</p>
+        </div>
+        
+        <div class="reviews-container">
+            <!-- Review 1 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Client" class="review-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Sophie Martin</div>
+                        <div class="review-date">15 Mars 2023</div>
+                    </div>
+                </div>
+                <div class="star-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="review-content">
+                    "J'ai acheté la Trotty Pro X il y a 3 mois et j'en suis ravie ! Autonomie incroyable, très confortable et parfaite pour mes trajets quotidiens. Le service client est également top !"
+                </div>
+            </div>
+            
+            <!-- Review 2 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client" class="review-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Thomas Dubois</div>
+                        <div class="review-date">2 Avril 2023</div>
+                    </div>
+                </div>
+                <div class="star-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="review-content">
+                    "Excellente expérience avec la location d'une Trotty Adventure pour le week-end. La trottinette est très puissante et parfaite pour les chemins. Je recommande vivement !"
+                </div>
+            </div>
+            
+            <!-- Review 3 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Client" class="review-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Camille Leroy</div>
+                        <div class="review-date">28 Février 2023</div>
+                    </div>
+                </div>
+                <div class="star-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="review-content">
+                    "La Trotty Lite est parfaite pour mes besoins. Légère, facile à transporter et suffisamment puissante pour mes déplacements en ville. Le SAV a été réactif quand j'ai eu une question sur la recharge."
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.main-nav').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
