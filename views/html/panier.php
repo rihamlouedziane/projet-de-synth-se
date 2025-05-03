@@ -4,18 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier - Trotty - Vente et Location de Trottinettes Électriques</title>
-
     <style>
+        :root {
+            --primary-blue: #2a4b8d;
+            --primary-yellow: #f5a623;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333333;
+        }
         
-
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
             background-color: var(--light-gray);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-       
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
 
         /* Cart Page Specific Styles */
         .cart-hero {
@@ -43,14 +57,17 @@
             padding: 0 2rem;
             display: flex;
             gap: 3rem;
+            flex-wrap: wrap;
         }
 
         .cart-items {
             flex: 2;
+            min-width: 300px;
         }
 
         .cart-summary {
             flex: 1;
+            min-width: 300px;
         }
 
         .cart-table {
@@ -275,46 +292,6 @@
         }
 
         @media (max-width: 768px) {
-            .header-container {
-                padding: 1rem;
-            }
-            
-            .nav-container {
-                position: static;
-                transform: none;
-                width: 100%;
-            }
-            
-            .main-nav {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: var(--white);
-                padding: 1rem;
-                display: none;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                z-index: 1000;
-            }
-            
-            .main-nav.active {
-                display: block;
-            }
-            
-            .main-nav ul {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .main-nav a {
-                display: block;
-                text-align: center;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
             .cart-hero h1 {
                 font-size: 2rem;
             }
@@ -332,10 +309,6 @@
             .product-image {
                 width: 80px;
                 height: 80px;
-            }
-            
-            .user-actions {
-                margin-left: auto;
             }
         }
 
@@ -387,15 +360,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include('../layout/header.php'); ?>
+    <?php include('../layout/header.php'); ?>
+    
     <section class="cart-hero">
-        <h1>Votre Panier</h1>
-        <p>Revoyez vos articles avant de passer à la caisse</p>
+        <div class="container">
+            <h1>Votre Panier</h1>
+            <p>Revoyez vos articles avant de passer à la caisse</p>
+        </div>
     </section>
     
-    <div class="cart-container">
+    <div class="container cart-container">
         <div class="cart-items">
-            <!-- Cart with items -->
             <table class="cart-table">
                 <thead>
                     <tr>
@@ -406,98 +381,10 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td data-label="Produit">
-                            <div class="product-cell">
-                                <div class="product-image">
-                                    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro X">
-                                </div>
-                                <div class="product-info">
-                                    <h4>Trotty Pro X</h4>
-                                    <p>Couleur: Bleu</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td data-label="Prix" class="price">1 299€</td>
-                        <td data-label="Quantité">
-                            <div class="quantity-control">
-                                <button class="quantity-btn">-</button>
-                                <input type="number" class="quantity-input" value="1" min="1">
-                                <button class="quantity-btn">+</button>
-                            </div>
-                        </td>
-                        <td data-label="Total" class="price">1 299€</td>
-                        <td>
-                            <button class="remove-btn" title="Supprimer">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="Produit">
-                            <div class="product-cell">
-                                <div class="product-image">
-                                    <img src="https://images.unsplash.com/photo-1624623278313-a930126a11c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Trotty Lite">
-                                </div>
-                                <div class="product-info">
-                                    <h4>Trotty Lite</h4>
-                                    <p>Couleur: Noir</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td data-label="Prix" class="price">499€</td>
-                        <td data-label="Quantité">
-                            <div class="quantity-control">
-                                <button class="quantity-btn">-</button>
-                                <input type="number" class="quantity-input" value="1" min="1">
-                                <button class="quantity-btn">+</button>
-                            </div>
-                        </td>
-                        <td data-label="Total" class="price">499€</td>
-                        <td>
-                            <button class="remove-btn" title="Supprimer">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="Produit">
-                            <div class="product-cell">
-                                <div class="product-image">
-                                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2089&q=80" alt="Batterie de rechange">
-                                </div>
-                                <div class="product-info">
-                                    <h4>Batterie de rechange</h4>
-                                    <p>Compatible avec Trotty Pro X</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td data-label="Prix" class="price">199€</td>
-                        <td data-label="Quantité">
-                            <div class="quantity-control">
-                                <button class="quantity-btn">-</button>
-                                <input type="number" class="quantity-input" value="1" min="1">
-                                <button class="quantity-btn">+</button>
-                            </div>
-                        </td>
-                        <td data-label="Total" class="price">199€</td>
-                        <td>
-                            <button class="remove-btn" title="Supprimer">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                <tbody id="cartItemsContainer">
+                    <!-- Cart items will be loaded here dynamically -->
                 </tbody>
             </table>
-
-            <!-- Empty cart state (hidden by default) -->
-            <!-- <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <h3>Votre panier est vide</h3>
-                <p>Parcourez notre catalogue et trouvez la trottinette parfaite pour vous</p>
-                <a href="sell.html" class="btn">Voir nos produits</a>
-            </div> -->
         </div>
         
         <div class="cart-summary">
@@ -506,7 +393,7 @@
                 
                 <div class="summary-row">
                     <span>Sous-total</span>
-                    <span>1 997€</span>
+                    <span id="summarySubtotal">0€</span>
                 </div>
                 
                 <div class="summary-row">
@@ -514,19 +401,14 @@
                     <span>Gratuite</span>
                 </div>
                 
-                <div class="summary-row">
-                    <span>Remise</span>
-                    <span>-50€</span>
-                </div>
-                
                 <div class="summary-row total">
                     <span>Total</span>
-                    <span>1 947€</span>
+                    <span id="summaryTotal">0€</span>
                 </div>
                 
-                <button class="checkout-btn">Passer la commande</button>
+                <button class="checkout-btn" id="checkoutBtn">Passer la commande</button>
                 
-                <a href="sell.html" class="continue-shopping">
+                <a href="sell.php" class="continue-shopping">
                     <i class="fas fa-arrow-left"></i> Continuer vos achats
                 </a>
             </div>
@@ -534,35 +416,161 @@
     </div>
 
     <script>
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            document.querySelector('.main-nav').classList.toggle('active');
-        });
-
-        // Quantity controls
-        document.querySelectorAll('.quantity-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const input = this.parentNode.querySelector('.quantity-input');
-                let value = parseInt(input.value);
+        // Load cart items from localStorage
+        function loadCartItems() {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            const summarySubtotal = document.getElementById('summarySubtotal');
+            const summaryTotal = document.getElementById('summaryTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            if (cartItems.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center;">
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h3>Votre panier est vide</h3>
+                                <p>Parcourez notre catalogue et trouvez la trottinette parfaite pour vous</p>
+                                <a href="sell.php" class="btn">Voir nos produits</a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                summarySubtotal.textContent = '0€';
+                summaryTotal.textContent = '0€';
+                checkoutBtn.disabled = true;
+                return;
+            }
+            
+            let subtotal = 0;
+            let html = '';
+            
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
                 
-                if (this.textContent === '+' && value < 10) {
-                    input.value = value + 1;
-                } else if (this.textContent === '-' && value > 1) {
-                    input.value = value - 1;
-                }
-                
-                // Here you would update the cart total in a real implementation
+                html += `
+                    <tr>
+                        <td data-label="Produit">
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <img src="${item.image}" alt="${item.name}">
+                                </div>
+                                <div class="product-info">
+                                    <h4>${item.name}</h4>
+                                    <p>Référence: ${item.id}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Prix" class="price">${item.price}€</td>
+                        <td data-label="Quantité">
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}">
+                                <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                            </div>
+                        </td>
+                        <td data-label="Total" class="price">${itemTotal}€</td>
+                        <td>
+                            <button class="remove-btn" title="Supprimer" data-id="${item.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
             });
-        });
-
-        // Remove item
-        document.querySelectorAll('.remove-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                row.remove();
-                
-                // Here you would update the cart summary in a real implementation
+            
+            container.innerHTML = html;
+            summarySubtotal.textContent = `${subtotal}€`;
+            summaryTotal.textContent = `${subtotal}€`;
+            checkoutBtn.disabled = false;
+            
+            // Add event listeners to the new elements
+            addCartEventListeners();
+        }
+        
+        function addCartEventListeners() {
+            // Quantity controls
+            document.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    const input = this.parentNode.querySelector('.quantity-input');
+                    let value = parseInt(input.value);
+                    let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+                    
+                    const itemIndex = cartItems.findIndex(item => item.id.toString() === productId);
+                    
+                    if (this.classList.contains('plus') && value < 10) {
+                        input.value = value + 1;
+                        cartItems[itemIndex].quantity = value + 1;
+                    } else if (this.classList.contains('minus') && value > 1) {
+                        input.value = value - 1;
+                        cartItems[itemIndex].quantity = value - 1;
+                    }
+                    
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    loadCartItems();
+                    updateCartCount();
+                });
             });
+            
+            // Quantity input changes
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const productId = this.getAttribute('data-id');
+                    let value = parseInt(this.value);
+                    
+                    if (value < 1) value = 1;
+                    if (value > 10) value = 10;
+                    
+                    this.value = value;
+                    
+                    let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+                    const itemIndex = cartItems.findIndex(item => item.id.toString() === productId);
+                    cartItems[itemIndex].quantity = value;
+                    
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    loadCartItems();
+                    updateCartCount();
+                });
+            });
+            
+            // Remove item
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+                    
+                    cartItems = cartItems.filter(item => item.id.toString() !== productId);
+                    
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    loadCartItems();
+                    updateCartCount();
+                });
+            });
+        }
+        
+        function updateCartCount() {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+            
+            const cartCountElements = document.querySelectorAll('.cart-count');
+            cartCountElements.forEach(el => {
+                el.textContent = totalItems;
+                el.style.display = totalItems > 0 ? 'flex' : 'none';
+            });
+        }
+        
+        // Checkout button
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            alert('Redirection vers la page de paiement...');
+        });
+        
+        // Initialize cart on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartItems();
+            updateCartCount();
         });
     </script>
 </body>

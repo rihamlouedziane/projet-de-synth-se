@@ -531,6 +531,7 @@
 </head>
 <body>
 <?php include('../layout/header.php'); ?>
+
     
     <section class="action-section">
         <div class="action-buttons">
@@ -590,7 +591,12 @@
                     </div>
                     <div class="product-price">1 299€</div>
                     <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
+                    <?php if (isset($_SESSION['client_id'])): ?>
+                            <a href="../html/dashboardclient/dashbordCP.php" class="btn btn-primary">Acheter</a>
+                        <?php else: ?>
+                            <a href="../../controllers/Client/LoginController.php" class="btn btn-primary">Acheter</a>
+                        <?php endif; ?>
+
                         <a href="#" class="btn btn-secondary">Détails</a>
                     </div>
                 </div>

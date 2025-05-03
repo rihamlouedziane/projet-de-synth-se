@@ -2,45 +2,25 @@
 require_once 'Client.php';
 
 class ClientParticulier extends Client {
-    private $prenom;
-    private $dateNaissance;
-    private $civilite;
-    private $idRespo;
+    // ICE, FormeJuridique et Representant sont NULL
 
-    public function __construct($nom, $prenom, $dateNaissance, $adresse, $email, $password, $civilite, $idRespo, $telephone, $isHashed = false) {
-        parent::__construct($nom, $telephone, $email, $adresse, $password, $isHashed);
-        $this->prenom = $prenom;
-        $this->dateNaissance = $dateNaissance;
-        $this->civilite = $civilite;
-        $this->idRespo = $idRespo;
-        $this->type_client = 'particulier';
+    public function __construct($nom, $adresse, $telephone, $email, $password, $ice = null, $forme = null, $representant = null, $isHashed = false) {
+        parent::__construct($nom, $adresse, $telephone, $email, $password, 1, $isHashed);
     }
 
     public function save($db) {
-        // Préparation de la requête avec PDO
-        $stmt = $db->prepare("INSERT INTO clientparticulier 
-            (Nom, Prenom, DateNaissance, Adresse, Email, Mdp, Civilite, IdRespo, tel) 
-            VALUES (:nom, :prenom, :dateNaissance, :adresse, :email, :password, :civilite, 2, :telephone)");
+        $stmt = $db->prepare("INSERT INTO client 
+            (NomClient, Adresse, Telephone, Email, TypeClient, MotDePasse, ICE, FormeJuridique, Representant) 
+            VALUES (:nom, :adresse, :telephone, :email, :type, :password, NULL, NULL, NULL)");
 
-        // Lier les paramètres aux valeurs de l'objet
         $stmt->bindValue(':nom', $this->nom);
-        $stmt->bindValue(':prenom', $this->prenom);
-        $stmt->bindValue(':dateNaissance', $this->dateNaissance);
         $stmt->bindValue(':adresse', $this->adresse);
-        $stmt->bindValue(':email', $this->email);
-        $stmt->bindValue(':password', $this->password);
-        $stmt->bindValue(':civilite', $this->civilite);
-
         $stmt->bindValue(':telephone', $this->telephone);
+        $stmt->bindValue(':email', $this->email);
+        $stmt->bindValue(':type', 1);
+        $stmt->bindValue(':password', $this->password);
 
-        // Exécution de la requête
         return $stmt->execute();
     }
-
-    // Getters si besoin
-    public function getPrenom() { return $this->prenom; }
-    public function getDateNaissance() { return $this->dateNaissance; }
-    public function getCivilite() { return $this->civilite; }
-    public function getIdRespo() { return $this->idRespo; }
 }
 ?>

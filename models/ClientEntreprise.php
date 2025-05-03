@@ -1,38 +1,34 @@
 <?php
 require_once 'Client.php';
-class ClientEntreprise extends Client {
-    private $numeroICE;
-    private $secteurActivite;
-    private $idRespo;
 
-    public function __construct($nom, $adresse, $email, $numeroICE, $secteurActivite,$idRespo ,$telephone, $password, $isHashed = false) {
-        parent::__construct($nom, $telephone, $email, $adresse, $password, $isHashed ); 
-        $this->type_client = 'entreprise';  
-        $this->numeroICE = $numeroICE;
-        $this->secteurActivite = $secteurActivite;
-        $this->idRespo = $idRespo;
+class ClientEntreprise extends Client {
+    private $ice;
+    private $formeJuridique;
+    private $representant;
+
+    public function __construct($nom, $adresse, $telephone, $email, $password, $ice, $formeJuridique, $representant, $isHashed = false) {
+        parent::__construct($nom, $adresse, $telephone, $email, $password, 2, $isHashed);
+        $this->ice = $ice;
+        $this->formeJuridique = $formeJuridique;
+        $this->representant = $representant;
     }
 
     public function save($db) {
+        $stmt = $db->prepare("INSERT INTO client 
+            (NomClient, Adresse, Telephone, Email, TypeClient, MotDePasse, ICE, FormeJuridique, Representant) 
+            VALUES (:nom, :adresse, :telephone, :email, :type, :password, :ice, :forme, :representant)");
 
-    
-        // Spécifier les colonnes dans la requête INSERT
-        $stmt = $db->prepare("INSERT INTO cliententreprise 
-            (NomCE, Adresse, EmailCE, NumeroICE, SecteurActivite, IdRespo, tel, Mdp) 
-            VALUES (:nomCE, :adresse, :emailCE, :numeroICE, :secteur, :idRespo, :tel, :password)");
-    
-        // Lier les valeurs
-        $stmt->bindValue(':nomCE', $this->nom); 
-        $stmt->bindValue(':adresse', $this->adresse);  
-        $stmt->bindValue(':emailCE', $this->email); 
-        $stmt->bindValue(':numeroICE', $this->numeroICE);  
-        $stmt->bindValue(':secteur', $this->secteurActivite);  
-        $stmt->bindValue(':idRespo', 2); 
-        $stmt->bindValue(':tel', $this->telephone);  
-        $stmt->bindValue(':password', $this->password);  
-    
-        return $stmt->execute();  
+        $stmt->bindValue(':nom', $this->nom);
+        $stmt->bindValue(':adresse', $this->adresse);
+        $stmt->bindValue(':telephone', $this->telephone);
+        $stmt->bindValue(':email', $this->email);
+        $stmt->bindValue(':type', 2);
+        $stmt->bindValue(':password', $this->password);
+        $stmt->bindValue(':ice', $this->ice);
+        $stmt->bindValue(':forme', $this->formeJuridique);
+        $stmt->bindValue(':representant', $this->representant);
+
+        return $stmt->execute();
     }
-    
 }
 ?>

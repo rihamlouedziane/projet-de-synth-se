@@ -414,7 +414,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include('../layout/header.php'); ?> 
+<?php 
+require_once __DIR__ . '/../../Controllers/TrotinetteController.php';
+use TROTYY\Controllers\TrotinetteController;
+
+$trotinetteController = new TrotinetteController();
+$products = $trotinetteController->getProductsForRent(); // This gets products with type=2 (for rent)
+
+include('../layout/header.php'); 
+?>
     
     <section class="products-section">
         <div class="section-header">
@@ -464,27 +472,25 @@
         </div>
         
         <div class="products-grid">
-            <!-- Product 1 -->
+            <?php foreach ($products as $product): ?>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro X">
+                    <img src="<?= htmlspecialchars($product['ImageURL'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" alt="<?= htmlspecialchars($product['Nom']) ?>">
+                    <?php if ($product['IsPopular'] ?? false): ?>
                     <span class="product-badge">Populaire</span>
+                    <?php endif; ?>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-title">Trotty Pro X</h3>
+                    <h3 class="product-title"><?= htmlspecialchars($product['Libelle']) ?></h3>
                     <div class="product-specs">
                         <div class="spec-item">
-                            <i>⚡</i> 45 km/h - Autonomie 60km
+                            <i>⚡</i> <?= htmlspecialchars($product['Puissance'] ?? 'N/A') ?> km/h - Autonomie <?= htmlspecialchars($product['Autonomie'] ?? 'N/A') ?>km
                         </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 4h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 15 kg - Portée 120kg
-                        </div>
+                        
+                       
                     </div>
                     
-                    <div class="daily-price">Prix journalier: <strong>35€</strong></div>
+                    <div class="daily-price">Prix journalier: <strong><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>€</strong></div>
                     
                     <div class="rental-controls">
                         <div class="days-control">
@@ -495,300 +501,21 @@
                         <span>jour(s)</span>
                     </div>
                     
-                    <div class="rental-price">35€</div>
+                    <div class="rental-price"><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>€</div>
                     
                     <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
+                        <a href="rent_process.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-primary">Louer maintenant</a>
+                        <a href="details2.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">Détails</a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Product 2 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty City">
-                    <span class="product-badge">Économique</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty City</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 25 km/h - Autonomie 35km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 3h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 12 kg - Portée 100kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>20€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">20€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 3 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1621891337563-85a8b4b5dc25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Adventure">
-                    <span class="product-badge">Tout-terrain</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Adventure</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 40 km/h - Autonomie 50km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 5h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 18 kg - Portée 150kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>30€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">30€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 4 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1624623278313-a930126a11c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Trotty Lite">
-                    <span class="product-badge">Compacte</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Lite</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 20 km/h - Autonomie 25km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 2h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 9 kg - Portée 80kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>15€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">15€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 5 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Trotty Speed">
-                    <span class="product-badge">Nouveau</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Speed</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 50 km/h - Autonomie 70km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 6h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 20 kg - Portée 150kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>45€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">45€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 6 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1624628639851-57e5a8a6d4a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Urban">
-                    <span class="product-badge">Édition limitée</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Urban</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 30 km/h - Autonomie 45km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 3h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 14 kg - Portée 110kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>25€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">25€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 7 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Fold">
-                    <span class="product-badge">Pliable</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Fold</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 25 km/h - Autonomie 30km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 3h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 11 kg - Portée 100kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>22€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">22€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 8 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1624628639851-57e5a8a6d4a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro 2">
-                    <span class="product-badge">Premium</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Pro 2</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 55 km/h - Autonomie 80km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 5h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 22 kg - Portée 160kg
-                        </div>
-                    </div>
-                    
-                    <div class="daily-price">Prix journalier: <strong>50€</strong></div>
-                    
-                    <div class="rental-controls">
-                        <div class="days-control">
-                            <button class="days-btn minus-btn">-</button>
-                            <span class="days-value">1</span>
-                            <button class="days-btn plus-btn">+</button>
-                        </div>
-                        <span>jour(s)</span>
-                    </div>
-                    
-                    <div class="rental-price">50€</div>
-                    
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Louer maintenant</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
     <script>
         // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
             document.querySelector('.main-nav').classList.toggle('active');
         });
 

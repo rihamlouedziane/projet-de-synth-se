@@ -1,21 +1,65 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Define absolute paths
+$rootPath = dirname(__DIR__, 2);
+
+// Include required files
+require_once $rootPath . '/config/database.php';
+require_once $rootPath . '/Models/Trotinette.php';
+require_once $rootPath . '/Controllers/TrotinetteController.php';
+
+// Initialize controller and get products
+try {
+    $controller = new TROTYY\Controllers\TrotinetteController();
+    
+    // Get filter parameters from URL
+    $category = $_GET['category'] ?? 0;
+    $limit = $_GET['limit'] ?? 12; // Default to 12 products
+    
+    // Get filtered products
+    $trottinettes = $controller->getProductsForSale($limit, $category);
+    
+    // Ensure we have an array even if empty
+    if (!is_array($trottinettes)) {
+        $trottinettes = [];
+        error_log("Warning: getProductsForSale() did not return an array");
+    }
+} catch (Exception $e) {
+    // Handle errors gracefully
+    $trottinettes = [];
+    error_log("Error loading products: " . $e->getMessage());
+    $errorMessage = "Error loading products. Please try again later.";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trotty - Acheter des Trottinettes Électriques</title>
-  
-   <style>
-        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2a4b8d;
+            --primary-yellow: #f5a623;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333333;
+        }
 
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-gray);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
-
-        
 
         /* Main Content Styles */
         .products-section {
@@ -43,10 +87,10 @@
             margin: 0 auto;
         }
 
-        /* Updated Products Grid - 4 columns */
+        /* Products Grid - 4 columns */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Fixed 4 columns */
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
         }
 
@@ -58,6 +102,8 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
+            position: relative;
         }
 
         .product-card:hover {
@@ -92,6 +138,7 @@
             border-radius: 50px;
             font-weight: 600;
             font-size: 0.8rem;
+            z-index: 2;
         }
 
         .product-info {
@@ -146,6 +193,9 @@
             transition: all 0.3s ease;
             text-align: center;
             flex: 1;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -168,7 +218,7 @@
             color: var(--white);
         }
 
-        /* Enhanced Filter Section */
+        /* Filter Section */
         .filter-section {
             background-color: var(--white);
             padding: 2.5rem;
@@ -235,6 +285,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
         }
 
         .filter-option:hover, .filter-option.active {
@@ -243,21 +295,51 @@
             border-color: var(--primary-blue);
         }
 
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            color: var(--primary-blue);
-            cursor: pointer;
-            padding: 0.5rem;
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 3rem;
+            gap: 0.5rem;
+        }
+        
+        .pagination a {
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination a.active, .pagination a:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+        
+        /* No products message */
+        .no-products {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            text-align: center;
         }
 
         /* Responsive Styles */
         @media (max-width: 1200px) {
             .products-grid {
-                grid-template-columns: repeat(3, 1fr); /* 3 columns on smaller screens */
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .filter-groups {
@@ -266,61 +348,7 @@
             }
         }
 
-        @media (max-width: 1024px) {
-            .user-actions {
-                gap: 1rem;
-            }
-
-            .user-action a span.text {
-                display: none;
-            }
-
-            .user-action a {
-                padding: 0.5rem;
-            }
-        }
-
         @media (max-width: 768px) {
-            .header-container {
-                padding: 1rem;
-            }
-            
-            .nav-container {
-                position: static;
-                transform: none;
-                width: 100%;
-            }
-            
-            .main-nav {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: var(--white);
-                padding: 1rem;
-                display: none;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                z-index: 1000;
-            }
-            
-            .main-nav.active {
-                display: block;
-            }
-            
-            .main-nav ul {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .main-nav a {
-                display: block;
-                text-align: center;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-
             .products-section {
                 padding: 3rem 1.5rem;
             }
@@ -330,15 +358,11 @@
             }
 
             .products-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .product-actions {
                 flex-direction: column;
-            }
-
-            .user-actions {
-                margin-left: auto;
             }
 
             .filter-section {
@@ -354,7 +378,7 @@
 
         @media (max-width: 480px) {
             .products-grid {
-                grid-template-columns: 1fr; /* 1 column on very small screens */
+                grid-template-columns: 1fr;
             }
             
             .filter-option {
@@ -363,301 +387,172 @@
             }
         }
     </style>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <?php include('../layout/header.php'); ?>
-    
-    <section class="products-section">
-        <div class="section-header">
-            <h1>Nos Trottinettes à Vendre</h1>
-            <p>Découvrez notre gamme complète de trottinettes électriques haut de gamme pour tous les besoins et budgets.</p>
-        </div>
 
-        <div class="filter-section">
-            <div class="filter-header">
-                <h2 class="filter-title">Filtrer les produits</h2>
-                <a href="#" class="reset-filters">
-                    <i class="fas fa-undo"></i>
-                    Réinitialiser
-                </a>
-            </div>
-            
-            <div class="filter-groups">
-                <div class="filter-group">
-                    <h3>Catégories</h3>
-                    <div class="filter-options">
-                        <div class="filter-option active">Tous</div>
-                        <div class="filter-option">Ville</div>
-                        <div class="filter-option">Tout-terrain</div>
-                        <div class="filter-option">Compacte</div>
-                        <div class="filter-option">Puissante</div>
-                    </div>
-                </div>
-                
-                <div class="filter-group">
-                    <h3>Prix</h3>
-                    <div class="filter-options">
-                        <div class="filter-option">Moins de 500€</div>
-                        <div class="filter-option">500-1000€</div>
-                        <div class="filter-option">1000-1500€</div>
-                        <div class="filter-option">Plus de 1500€</div>
-                    </div>
-                </div>
-                
-                <div class="filter-group">
-                    <h3>Autonomie</h3>
-                    <div class="filter-options">
-                        <div class="filter-option">Moins de 30km</div>
-                        <div class="filter-option">30-50km</div>
-                        <div class="filter-option">50-70km</div>
-                        <div class="filter-option">Plus de 70km</div>
-                    </div>
-                </div>
-            </div>
+<section class="products-section">
+    <div class="section-header">
+        <h1>Nos Trottinettes à Vendre</h1>
+        <p>Découvrez notre gamme complète de trottinettes électriques haut de gamme pour tous les besoins et budgets.</p>
+    </div>
+
+    <div class="filter-section">
+        <div class="filter-header">
+            <h2 class="filter-title">Filtrer les produits</h2>
+            <a href="sell.php" class="reset-filters">
+                <i class="fas fa-undo"></i>
+                Réinitialiser
+            </a>
         </div>
         
-        <div class="products-grid">
-            <!-- Product 1 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro X">
-                    <span class="product-badge">Best Seller</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Pro X</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 45 km/h - Autonomie 60km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 4h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 15 kg - Portée 120kg
-                        </div>
-                    </div>
-                    <div class="product-price">1 299€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
+        <div class="filter-groups">
+            <div class="filter-group">
+                <h3>Catégories</h3>
+                <div class="filter-options">
+                    <a href="sell.php" class="filter-option <?= empty($category) ? 'active' : '' ?>">Tous</a>
+                    <a href="sell.php?category=1" class="filter-option <?= $category == 1 ? 'active' : '' ?>">Ville</a>
+                    <a href="sell.php?category=2" class="filter-option <?= $category == 2 ? 'active' : '' ?>">Tout-terrain</a>
+                    <a href="sell.php?category=3" class="filter-option <?= $category == 3 ? 'active' : '' ?>">Compacte</a>
+                    <a href="sell.php?category=4" class="filter-option <?= $category == 4 ? 'active' : '' ?>">Puissante</a>
                 </div>
             </div>
             
-            <!-- Product 2 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty City">
-                    <span class="product-badge">Économique</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty City</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 25 km/h - Autonomie 35km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 3h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 12 kg - Portée 100kg
-                        </div>
-                    </div>
-                    <div class="product-price">699€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 3 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1621891337563-85a8b4b5dc25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Adventure">
-                    <span class="product-badge">Tout-terrain</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Adventure</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 40 km/h - Autonomie 50km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 5h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 18 kg - Portée 150kg
-                        </div>
-                    </div>
-                    <div class="product-price">1 099€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 4 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1624623278313-a930126a11c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Trotty Lite">
-                    <span class="product-badge">Compacte</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Lite</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 20 km/h - Autonomie 25km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 2h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 9 kg - Portée 80kg
-                        </div>
-                    </div>
-                    <div class="product-price">499€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 5 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Trotty Speed">
-                    <span class="product-badge">Nouveau</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Speed</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 50 km/h - Autonomie 70km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 6h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 20 kg - Portée 150kg
-                        </div>
-                    </div>
-                    <div class="product-price">1 599€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 6 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1624628639851-57e5a8a6d4a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Urban">
-                    <span class="product-badge">Édition limitée</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Urban</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 30 km/h - Autonomie 45km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 3h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 14 kg - Portée 110kg
-                        </div>
-                    </div>
-                    <div class="product-price">899€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 7 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Fold">
-                    <span class="product-badge">Pliable</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Fold</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 25 km/h - Autonomie 30km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 3h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 11 kg - Portée 100kg
-                        </div>
-                    </div>
-                    <div class="product-price">749€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 8 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1624628639851-57e5a8a6d4a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Trotty Pro 2">
-                    <span class="product-badge">Nouvelle version</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Trotty Pro 2</h3>
-                    <div class="product-specs">
-                        <div class="spec-item">
-                            <i>⚡</i> 55 km/h - Autonomie 80km
-                        </div>
-                        <div class="spec-item">
-                            <i>⏱️</i> Charge rapide 5h
-                        </div>
-                        <div class="spec-item">
-                            <i>⚖️</i> 22 kg - Portée 160kg
-                        </div>
-                    </div>
-                    <div class="product-price">1 799€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">Acheter</a>
-                        <a href="#" class="btn btn-secondary">Détails</a>
-                    </div>
+            <div class="filter-group">
+                <h3>Nombre d'articles</h3>
+                <div class="filter-options">
+                    <a href="sell.php?<?= $category ? "category=$category&" : '' ?>limit=12" class="filter-option <?= $limit == 12 ? 'active' : '' ?>">12</a>
+                    <a href="sell.php?<?= $category ? "category=$category&" : '' ?>limit=24" class="filter-option <?= $limit == 24 ? 'active' : '' ?>">24</a>
+                    <a href="sell.php?<?= $category ? "category=$category&" : '' ?>limit=36" class="filter-option <?= $limit == 36 ? 'active' : '' ?>">36</a>
+                    <a href="sell.php?<?= $category ? "category=$category&" : '' ?>limit=0" class="filter-option <?= $limit == 0 ? 'active' : '' ?>">Tous</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    
+    <?php if (isset($errorMessage)): ?>
+        <div class="error-message">
+            <?= $errorMessage ?>
+        </div>
+    <?php endif; ?>
+    
+    <div class="products-grid">
+        <?php if (empty($trottinettes)): ?>
+            <div class="no-products">
+                <h3>Aucune trottinette disponible dans cette catégorie</h3>
+                <p>Veuillez essayer une autre catégorie ou revenir plus tard.</p>
+                <a href="sell.php" class="btn btn-primary">Voir toutes les trottinettes</a>
+            </div>
+        <?php else: ?>
+            <?php foreach ($trottinettes as $trott): ?>
+                <div class="product-card" onclick="window.location.href='details.php?id=<?= $trott['IDTrotinette'] ?>'">
+                    <div class="product-image">
+                        <img src="<?= htmlspecialchars($trott['ImageURL'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" 
+                             alt="<?= htmlspecialchars($trott['Libelle']) ?>">
+                        <?php if ($trott['IsBestSeller'] ?? rand(0, 5) === 1): ?>
+                            <span class="product-badge">Best Seller</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title"><?= htmlspecialchars($trott['Libelle']) ?></h3>
+                        <div class="product-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-bolt"></i> Vitesse: <?= round($trott['Puissance'] / 10) ?> km/h
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-battery-full"></i> Autonomie: <?= $trott['Autonomie'] ?> km
+                            </div>
+                        </div>
+                        <div class="product-price"><?= number_format($trott['Tarif'], 0, ',', ' ') ?> €</div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" 
+                                    onclick="event.stopPropagation(); 
+                                             addToCart(
+                                                 <?= $trott['IDTrotinette'] ?>, 
+                                                 '<?= htmlspecialchars(addslashes($trott['Libelle'])) ?>',
+                                                 <?= $trott['Tarif'] ?>,
+                                                 '<?= htmlspecialchars($trott['ImageURL'] ?? 'default-image.jpg') ?>'
+                                             )">
+                                <i class="fas fa-shopping-cart"></i> Ajouter
+                            </button>
+                            <a href="details.php?id=<?= $trott['IDTrotinette'] ?>" class="btn btn-secondary" onclick="event.stopPropagation()">
+                                <i class="fas fa-info-circle"></i> Détails
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    
+    <?php if ($limit > 0 && count($trottinettes) >= $limit): ?>
+        <div class="pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#"><i class="fas fa-chevron-right"></i></a>
+        </div>
+    <?php endif; ?>
+</section>
 
-    <script>
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            document.querySelector('.main-nav').classList.toggle('active');
-        });
+<script>
+    // Mobile menu toggle
+    document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+        document.querySelector('.main-nav').classList.toggle('active');
+    });
 
-        // Filter functionality
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove active class from all options in the same group
-                this.parentNode.querySelectorAll('.filter-option').forEach(opt => {
-                    opt.classList.remove('active');
-                });
-                
-                // Add active class to clicked option
-                this.classList.add('active');
-                
-                // Here you would typically filter the products
-                // For now, this is just a UI demonstration
+    // Add to cart function
+    function addToCart(productId, productName, productPrice, productImage) {
+        // Get existing cart items or initialize empty array
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        
+        // Check if product already exists in cart
+        const existingItem = cartItems.find(item => item.id === productId);
+        
+        if (existingItem) {
+            // Increment quantity if already in cart (max 10)
+            if (existingItem.quantity < 10) {
+                existingItem.quantity += 1;
+            }
+        } else {
+            // Add new item to cart
+            cartItems.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                image: productImage,
+                quantity: 1
             });
+        }
+        
+        // Save back to localStorage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        
+        // Update cart count in header
+        updateCartCount();
+        
+        // Show confirmation
+        alert(`${productName} a été ajouté à votre panier !`);
+    }
+
+    // Update cart count in header
+    function updateCartCount() {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+        
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(el => {
+            el.textContent = totalItems;
+            el.style.display = totalItems > 0 ? 'flex' : 'none';
         });
-    </script>
+    }
+
+    // Make entire product card clickable except for buttons
+    document.querySelectorAll('.product-actions a, .product-actions button').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+</script>
 </body>
 </html>

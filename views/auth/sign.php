@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inscription</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../public/css/signup1.css">
+  <link rel="stylesheet" href="../../public/css/signup1.css">
 </head>
 <style>
     .alert-danger {
@@ -20,8 +20,8 @@
 <body>
   
   <header>
-    <div class="logo"><img src="../public/images/trotty  logo grand-04.png" alt="Logo de l'hôtel"></div>
-    <div class="title"><img src="../public/images/trotty [Récupéré]-02-02.png" alt="Nom de l'hôtel"></div>
+    <div class="logo"><img src="../../public/images/trotty  logo grand-04.png" alt="Logo de l'hôtel"></div>
+    <div class="title"><img src="../../public/images/trotty [Récupéré]-02-02.png" alt="Nom de l'hôtel"></div>
   </header>
 
   <?php if (isset($error) && !empty($error)): ?>
@@ -33,7 +33,7 @@
   <div class="container container-form">
     <div class="form-title">Formulaire d'inscription</div>
 
-    <form method="POST" action="../controllers/ClientController.php" onsubmit="return validateForm()">
+    <form method="POST" action="../Client/ClientController.php" onsubmit="return validateForm()">
       <div class="row mb-3">
         <div class="col-md-6">
           <label for="nom" class="form-label">Nom:</label>
@@ -69,45 +69,44 @@
       <div class="mb-3">
         <label for="type_client" class="form-label">Type de client:</label>
         <select name="type_client" id="type_client" class="form-select" required>
+          <option value="" <?php echo (empty($_POST['type_client']) ? 'selected' : ''); ?>>Sélectionner un type de client</option>
           <option value="particulier" <?php echo (isset($_POST['type_client']) && $_POST['type_client'] == 'particulier') ? 'selected' : ''; ?>>Particulier</option>
           <option value="entreprise" <?php echo (isset($_POST['type_client']) && $_POST['type_client'] == 'entreprise') ? 'selected' : ''; ?>>Entreprise</option>
         </select>
       </div>
 
-      <!-- Client particulier -->
-      <div id="particulier_fields" class="conditional-fields mb-3">
+
+
+      <!-- Client entreprise -->
+      <div id="entreprise_fields" class="conditional-fields mb-3" style="display:none;">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="prenom" class="form-label">Prénom:</label>
-            <input type="text" name="prenom" class="form-control" value="<?php echo isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : ''; ?>">
+            <label for="ice" class="form-label">Numéro ICE:</label>
+            <input type="text" name="ice" class="form-control" value="<?php echo isset($_POST['ice']) ? htmlspecialchars($_POST['ice']) : ''; ?>" >
           </div>
           <div class="col-md-6 mb-3">
-            <label for="date_naissance" class="form-label">Date de naissance:</label>
-            <input type="date" name="date_naissance" class="form-control" value="<?php echo isset($_POST['date_naissance']) ? htmlspecialchars($_POST['date_naissance']) : ''; ?>">
+            <label for="forme_juridique" class="form-label">Forme juridique:</label>
+            <select name="forme_juridique" class="form-select">
+                <option value="SARL" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SARL') ? 'selected' : ''; ?>>SARL (Société à Responsabilité Limitée)</option>
+                <option value="SA" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SA') ? 'selected' : ''; ?>>SA (Société Anonyme)</option>
+                <option value="EI" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'EI') ? 'selected' : ''; ?>>EI (Entreprise Individuelle)</option>
+                <option value="EIRL" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'EIRL') ? 'selected' : ''; ?>>EIRL (Entreprise Individuelle à Responsabilité Limitée)</option>
+                <option value="SAS" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SAS') ? 'selected' : ''; ?>>SAS (Société par Actions Simplifiée)</option>
+                <option value="SASU" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SASU') ? 'selected' : ''; ?>>SASU (Société par Actions Simplifiée Unipersonnelle)</option>
+                <option value="SCI" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SCI') ? 'selected' : ''; ?>>SCI (Société Civile Immobilière)</option>
+                <option value="SCOP" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SCOP') ? 'selected' : ''; ?>>SCOP (Société Coopérative et Participative)</option>
+                <option value="SARL_de_famille" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SARL_de_famille') ? 'selected' : ''; ?>>SARL de famille</option>
+                <option value="SNC" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SNC') ? 'selected' : ''; ?>>SNC (Société en Nom Collectif)</option>
+                <option value="SELARL" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SELARL') ? 'selected' : ''; ?>>SELARL (Société d'Exercice Libéral à Responsabilité Limitée)</option>
+                <option value="SELAS" <?php echo (isset($_POST['forme_juridique']) && $_POST['forme_juridique'] == 'SELAS') ? 'selected' : ''; ?>>SELAS (Société d'Exercice Libéral par Actions Simplifiée)</option>
+            </select>
+
+
           </div>
         </div>
         <div class="mb-3">
-          <label for="civilite" class="form-label">Civilité:</label>
-          <select name="civilite" class="form-select">
-            <option value="" <?php echo (isset($_POST['civilite']) && $_POST['civilite'] == '') ? 'selected' : ''; ?>>-- Choisir --</option>
-            <option value="M" <?php echo (isset($_POST['civilite']) && $_POST['civilite'] == 'M') ? 'selected' : ''; ?>>M</option>
-            <option value="F" <?php echo (isset($_POST['civilite']) && $_POST['civilite'] == 'F') ? 'selected' : ''; ?>>F</option>
-            <option value="Autre" <?php echo (isset($_POST['civilite']) && $_POST['civilite'] == 'Autre') ? 'selected' : ''; ?>>Autre</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Client entreprise -->
-      <div id="entreprise_fields" class="conditional-fields mb-3">
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="siret" class="form-label">Numéro SIRET:</label>
-            <input type="text" name="siret" class="form-control" value="<?php echo isset($_POST['siret']) ? htmlspecialchars($_POST['siret']) : ''; ?>">
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="secteur" class="form-label">Secteur d'activité:</label>
-            <input type="text" name="secteur" class="form-control" value="<?php echo isset($_POST['secteur']) ? htmlspecialchars($_POST['secteur']) : ''; ?>">
-          </div>
+          <label for="representant" class="form-label">Nom du représentant:</label>
+          <input type="text" name="representant" class="form-control" value="<?php echo isset($_POST['representant']) ? htmlspecialchars($_POST['representant']) : ''; ?>" >
         </div>
       </div>
 
@@ -118,25 +117,15 @@
 <script>
   function updateClientFields() {
     const typeClient = document.getElementById('type_client').value;
-    const particulierFields = document.getElementById('particulier_fields');
     const entrepriseFields = document.getElementById('entreprise_fields');
 
-    if (typeClient === 'particulier') {
-      particulierFields.style.display = 'block';
+    if (typeClient === '' ||typeClient == 'particulier') { // Particulier
       entrepriseFields.style.display = 'none';
-      document.querySelector('input[name="prenom"]').setAttribute('required', '');
-      document.querySelector('input[name="date_naissance"]').setAttribute('required', '');
-      document.querySelector('select[name="civilite"]').setAttribute('required', '');
-      document.querySelector('input[name="siret"]').removeAttribute('required');
-      document.querySelector('input[name="secteur"]').removeAttribute('required');
-    } else {
+    } else { // Entreprise
       entrepriseFields.style.display = 'block';
-      particulierFields.style.display = 'none';
-      document.querySelector('input[name="prenom"]').removeAttribute('required');
-      document.querySelector('input[name="date_naissance"]').removeAttribute('required');
-      document.querySelector('select[name="civilite"]').removeAttribute('required');
-      document.querySelector('input[name="siret"]').setAttribute('required', '');
-      document.querySelector('input[name="secteur"]').setAttribute('required', '');
+    iceField.setAttribute('required', 'required');
+    formeJuridiqueField.setAttribute('required', 'required');
+    representantField.setAttribute('required', 'required');
     }
   }
 
@@ -145,20 +134,12 @@
 
   function validateForm() {
     const typeClient = document.getElementById('type_client').value;
-    if (typeClient === 'entreprise') {
-      const siret = document.querySelector('input[name="siret"]').value.trim();
-      const secteur = document.querySelector('input[name="secteur"]').value.trim();
-      if (!siret || !secteur) {
+    if (typeClient == 'entreprise') { // Entreprise
+      const ice = document.querySelector('input[name="ice"]').value.trim();
+      const formeJuridique = document.querySelector('input[name="forme_juridique"]').value.trim();
+      const representant = document.querySelector('input[name="representant"]').value.trim();
+      if (!ice || !formeJuridique || !representant) {
         alert("Veuillez remplir tous les champs pour l'entreprise.");
-        return false;
-      }
-    }
-    if (typeClient === 'particulier') {
-      const prenom = document.querySelector('input[name="prenom"]').value.trim();
-      const dateNaissance = document.querySelector('input[name="date_naissance"]').value.trim();
-      const civilite = document.querySelector('select[name="civilite"]').value.trim();
-      if (!prenom || !dateNaissance || !civilite) {
-        alert("Veuillez remplir tous les champs pour le particulier.");
         return false;
       }
     }
