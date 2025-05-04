@@ -1,33 +1,44 @@
+
 <?php
 session_start();
 require_once '../models/Panier.php';
 $db = require_once '../config/database.php';
 
-// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['client_id'])) {
     echo "Veuillez vous connecter pour ajouter des produits au panier.";
     exit;
 }
 
-if (isset($_GET['id'])) {
-    $idTrotinette = $_GET['id'];
-    $idClient = $_SESSION['client_id']; // ID du client connecté
+$idClient = $_SESSION['client_id'];
+$idTrotinette = $_GET['id'] ?? null;
+$idPiece = $_GET['idp'] ?? null;
 
-    try {
-        // Créer une instance de la classe Panier
-        $panier = new Panier($idClient, $idTrotinette);
-
-        // Ajouter ou mettre à jour le produit dans le panier
-        $panier->ajouterAuPanier($db);
-
-        // Rediriger l'utilisateur vers la page du panier après l'ajout
-        header('Location: IndexPanierController.php');
-        exit;
-
-    } catch (PDOException $e) {
-        echo "Erreur : " . $e->getMessage();
-    }
-} else {
+// Vérification que l'utilisateur a bien sélectionné un produit
+if ($idTrotinette === null && $idPiece === null) {
     echo "Aucun produit sélectionné.";
+    exit;
+}
+
+if ($idTrotinette !== null && $idPiece !== null) {
+    echo "Veuillez choisir un seul produit à la fois.";
+    exit;
+}
+
+
+
+// Création de l'objet Panier
+if (isset($idTrotinette)) {
+    $panier = new Panier($idClient, $idTrotinette, null, 1); // Quantité par défaut 1
+} elseif (isset($idPiece)) {
+    $panier = new Panier($idClient, null, $idPiece, 1); // Quantité par défaut 1
+}
+
+try {
+    $panier->ajouterAuPanier($db);
+    echo "Produit ajouté au panier avec succès !";
+    header('Location: IndexPanierController.php');
+    exit;
+} catch (PDOException $e) {
+    echo "Erreur : " . $e->getMessage();
 }
 ?>

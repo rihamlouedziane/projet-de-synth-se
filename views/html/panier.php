@@ -379,6 +379,7 @@
                 <thead>
                     <tr>
                         <th>Produit</th>
+                        <th>Nom</th>
                         <th>Prix</th>
                         <th>Quantité</th>
                         <th>Total</th>
@@ -386,43 +387,49 @@
                     </tr>
                 </thead>
                 <tbody id="cartItemsContainer">
-    <?php
-    if (!empty($paniers)) {
-        foreach ($paniers as $panier) {
-            $prixTotal = $panier['Quantite'] * $panier['Tarif']; 
-            ?>
+    <?php if (!empty($paniers)) : ?>
+        <?php foreach ($paniers as $panier) : 
+            $isPiece = !is_null($panier['IDPiece']);
+            $prixTotal = $panier['Quantite'] * $panier['Tarif'];
+        ?>
             <tr>
                 <td class="product-cell">
                     <div class="product-image">
-                        <img src="../public/uploads/image/<?php echo $panier['Photo']; ?>" alt="Image du produit">
-                    </div>
-                    <div class="product-info">
-                        <h4><?php echo $panier['modele_nom']; ?></h4>
-                       
+                    <img src="../public/uploads/image/<?= htmlspecialchars($panier['modele_photo'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" >
+
                     </div>
                 </td>
-                <td class="price"><?php echo number_format($panier['Tarif'], 2, ',', ' '); ?>€</td>
+                <td>
+                    <div class="product-info">
+                        <h4>
+                            <?= $isPiece 
+                                ? $panier['piece_reference'] 
+                                : $panier['modele_nom'] ?>
+                        </h4>
+                        <?php if (!$isPiece) : ?>
+                            <p>Numéro de série : <?= $panier['NumSerie'] ?></p>
+                        <?php endif; ?>
+                    </div>
+                </td>
+                <td class="price"><?= number_format($panier['Tarif'], 2, ',', ' ') ?>€</td>
                 <td class="quantity-control">
                     <button class="quantity-btn">-</button>
-                    <input type="number" class="quantity-input" value="<?php echo $panier['Quantite']; ?>" min="1">
+                    <input type="number" class="quantity-input" value="<?= $panier['Quantite'] ?>" min="1">
                     <button class="quantity-btn">+</button>
                 </td>
-                <td class="price"><?php echo number_format($prixTotal, 2, ',', ' '); ?>€</td>
+                <td class="price"><?= number_format($prixTotal, 2, ',', ' ') ?>€</td>
                 <td>
-                <a href="SuprimerPanierController.php?idPanier=<?php echo $panier['IDPanier']; ?>" 
-                    class="remove-link" 
-                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce panier ?');">
+                    <a href="SuprimerPanierController.php?idPanier=<?= $panier['IDPanier'] ?>" 
+                       class="remove-link" 
+                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
                         <i class="fas fa-trash-alt"></i> Supprimer
                     </a>
-
                 </td>
             </tr>
-            <?php
-        }
-    } else {
-        echo '<tr><td colspan="5" class="empty-cart">Votre panier est vide.</td></tr>';
-    }
-    ?>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <tr><td colspan="6" class="empty-cart">Votre panier est vide.</td></tr>
+    <?php endif; ?>
 </tbody>
 
             </table>

@@ -414,7 +414,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include('../views/layout/header1.php'); ?>
+<?php if (isset($_SESSION['client_id'])): ?>
+    <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+<?php else: ?>
+    <?php include('../views/layout/header1.php'); ?>
+<?php endif; ?>
     
     <section class="products-section">
         <div class="section-header">
@@ -467,7 +471,7 @@
             <?php foreach ($products as $product): ?>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="<?= htmlspecialchars($product['ImageURL'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" alt="<?= htmlspecialchars($product['Nom']) ?>">
+                <img src="../public/uploads/image/<?= htmlspecialchars($product['Photo'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" alt="<?= htmlspecialchars($product['Nom']) ?>">
                     <?php if ($product['IsPopular'] ?? false): ?>
                     <span class="product-badge">Populaire</span>
                     <?php endif; ?>
@@ -496,7 +500,14 @@
                     <div class="rental-price"><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>€</div>
                     
                     <div class="product-actions">
+                    <?php if (isset($_SESSION['client_id'])): ?>
                         <a href="rent_process.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-primary">Louer maintenant</a>
+                        <?php else: ?>
+                            <a href="../controllers/Client/LoginController.php" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Louer maintenant
+                            </a>
+                        <?php endif; ?>
+                     
                         <a href="../controllers/DetailsrentController.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">Détails</a>
                     </div>
                 </div>

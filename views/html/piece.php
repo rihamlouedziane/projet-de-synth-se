@@ -368,7 +368,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include('../layout/header.php'); ?>
+<?php if (isset($_SESSION['client_id'])): ?>
+    <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+<?php else: ?>
+    <?php include('../views/layout/header1.php'); ?>
+<?php endif; ?>
     
     <section class="products-section">
         <div class="section-header">
@@ -418,188 +422,40 @@
                 </div>
             </div>
         </div>
-        
+          
         <div class="products-grid">
-            <!-- Piece 1 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1605152276897-4f618f831968?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Batterie 36V">
-                    <span class="product-badge">Nouveau</span>
+                    <?php foreach ($pieces as $piece): ?>
+                        <div class="product-card">
+                            <div class="product-image">
+                        <img src="../public/uploads/image/<?= htmlspecialchars($piece['Photo'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" >
+
+
+                             
+                            </div>
+                            <div class="product-info">
+                                <h2 class="product-title"><?= htmlspecialchars($piece['Libelle']) ?></h2>
+                                <div class="product-price">Prix : <?= htmlspecialchars($piece['Prix']) ?> €</div>
+                                <div class="product-price">Quantité en stock :<?= htmlspecialchars($piece['QteStock']) ?> </div>
+                                <div class="product-actions">
+                                <?php if (isset($_SESSION['client_id'])): ?>
+                                    <a href="../controllers/PanierController.php?idp=<?=  $piece['IDPiece'] ?>" class="btn btn-primary">
+                                        <i class="fas fa-shopping-cart btn-icon"></i> Ajouter au panier
+                                    </a>
+                                <?php else: ?>
+                                    <a href="../controllers/Client/LoginController.php" class="btn btn-primary">
+                                        <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                                    </a>
+                                <?php endif; ?>
+                                   
+                                        <a href="../controllers/DetailsellController.php?id=<?= $piece['IDPiece'] ?>" class="btn btn-secondary" onclick="event.stopPropagation()">
+                                        <i class="fas fa-shopping-cart "></i> Détails
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <div class="product-info">
-                    <h3 class="product-title">Batterie 36V 10Ah</h3>
-                    <p class="product-compatibility">Compatible: Trotty City, Trotty Lite</p>
-                    <div class="product-price">89€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 2 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1558981852-426c6c22a060?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="Pneu arrière">
-                    <span class="product-badge">Stock limité</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Pneu arrière 10 pouces</h3>
-                    <p class="product-compatibility">Compatible: Trotty Adventure, Trotty Pro X</p>
-                    <div class="product-price">29€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 3 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1612195583950-b8fd34c87093?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Kit freins">
-                    <span class="product-badge">Best-seller</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Kit freins à disque</h3>
-                    <p class="product-compatibility">Compatible: Tous modèles Trotty</p>
-                    <div class="product-price">45€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 4 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Moteur 500W">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Moteur roue 500W</h3>
-                    <p class="product-compatibility">Compatible: Trotty City, Trotty Fold</p>
-                    <div class="product-price">120€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 5 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Phares LED">
-                    <span class="product-badge">Nouveau</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Phares LED avant/arrière</h3>
-                    <p class="product-compatibility">Compatible: Tous modèles Trotty</p>
-                    <div class="product-price">35€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 6 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1615663248957-b3905d0eeafb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Chaine">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Chaine de transmission</h3>
-                    <p class="product-compatibility">Compatible: Trotty Pro X, Trotty Adventure</p>
-                    <div class="product-price">22€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 7 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1308&q=80" alt="Ecran LCD">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Ecran LCD de contrôle</h3>
-                    <p class="product-compatibility">Compatible: Trotty Pro X, Trotty Pro 2</p>
-                    <div class="product-price">65€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Piece 8 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1608386113746-71a0f9d8a5e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Chargeur">
-                    <span class="product-badge">Promo</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Chargeur rapide 42V</h3>
-                    <p class="product-compatibility">Compatible: Tous modèles Trotty</p>
-                    <div class="product-price">55€</div>
-                    <div class="product-actions">
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart btn-icon"></i>
-                            Acheter
-                        </a>
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-info-circle btn-icon"></i>
-                            Détails
-                        </a>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </section>
 

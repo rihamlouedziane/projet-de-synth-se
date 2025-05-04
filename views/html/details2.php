@@ -292,12 +292,16 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-primary" id="addToCart">
-                        <i class="fas fa-shopping-cart"></i> Ajouter au panier
-                    </button>
+                <?php if (isset($_SESSION['client_id'])): ?>
                     <a href="achat.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">
                         <i class="fas fa-credit-card"></i> Acheter maintenant
                     </a>
+                        <?php else: ?>
+                            <a href="../controllers/Client/LoginController.php" class="btn btn-secondary">
+                                <i class="fas fa-credit-card"></i>  Acheter maintenant
+                            </a>
+                        <?php endif; ?>
+                  
                 </div>
             </div>
         </div>

@@ -48,20 +48,30 @@ class Panier {
 
     // Méthode pour récupérer tous les produits du panier d'un client
     public static function getPanierByClient($db, $idClient) {
-        // Requête SQL pour récupérer tous les produits d'un client dans le panier
-        $query = "SELECT p.IDPanier, p.IDTrotinette, p.IDPiece, p.Quantite, p.DateAjout, p.Statut, 
-                         t.NumSerie, t.TypeTarif, t.Tarif, m.Libelle as modele_nom ,m.Photo 
-                  FROM panier p
-                  JOIN trotinette t ON p.IDTrotinette = t.IDTrotinette
-                  JOIN modele m ON t.IDModele = m.IDModele
-                  WHERE p.IDClient = :idClient AND p.Statut = 'actif'"; // Statut actif
-
+        
+        $query ="SELECT p.IDPanier, 
+                p.IDTrotinette, 
+                p.IDPiece,
+                p.Quantite,
+                COALESCE(t.Tarif, pi.Prix) AS Tarif,
+                COALESCE(mt.Libelle, mp.Libelle) AS modele_nom,
+                COALESCE(mt.Photo, mp.Photo) AS modele_photo,
+                t.NumSerie,
+                pi.Reference AS piece_reference
+              FROM panier p
+              LEFT JOIN trotinette t ON p.IDTrotinette = t.IDTrotinette
+              LEFT JOIN modele mt ON t.IDModele = mt.IDModele
+              LEFT JOIN piece pi ON p.IDPiece = pi.IDPiece
+              LEFT JOIN modele mp ON pi.IDModele = mp.IDModele
+              WHERE p.IDClient = :idClient 
+                AND p.Statut = 'actif'";
+                    
         // Préparation de la requête
         $stmt = $db->prepare($query);
-
+    
         // Lier les paramètres
         $stmt->bindParam(':idClient', $idClient, PDO::PARAM_INT);
-
+    
         // Exécution de la requête
         try {
             $stmt->execute();
@@ -72,6 +82,11 @@ class Panier {
             return [];
         }
     }
+    
+    
+    
+    
+    
 
     
 public static function supprimerPanier($db, $idPanier) {

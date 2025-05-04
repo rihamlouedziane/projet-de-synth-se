@@ -42,10 +42,10 @@
         <div class="nav-container">
             <nav class="main-nav">
                 <ul>
-                    <li><a href="../views/html/dashboardclient/dashbordCP">Accueil</a></li>
+                    <li><a href="dashbord.php">Accueil</a></li>
                     <li><a href="TrotinettesellController.php">Acheter</a></li>
-                    <li><a href="../views/html/location.php">Louer</a></li>
-                    <li><a href="../views/html/piece.php">Pièces</a></li>
+                    <li><a href="TrotinetterentController.php">Louer</a></li>
+                    <li><a href="PieceController.php">Pièces</a></li>
                     <li><a href="../views/html/contactus.php" class="active">Contact</a></li>
                 </ul>
             </nav>
@@ -53,7 +53,7 @@
 
         <div class="user-actions">
             <div class="user-action">
-                <a href="../views/html/panier.php">
+                <a href="IndexPanierController.php">
                     <i class="fas fa-shopping-cart icon"></i>
                     <span class="text">Panier</span>
                     <span class="cart-count">3</span>
@@ -69,7 +69,7 @@
                     <div class="dropdown-menu">
                         <a href="profil.php">Mon profil</a>
                         <a href="commandes.php">Mes commandes</a>
-                        <a href="../../auth/logout.php">Déconnexion</a>
+                        <a href="../Controllers/Client/LogoutController.php">Déconnexion</a>
                     </div>
                 </div>
             <?php else: ?>

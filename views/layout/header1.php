@@ -57,7 +57,7 @@
                     <li><a href="../views/html/paged%27aceuille.php">Accueil</a></li>
                     <li><a href="TrotinettesellController.php">Acheter</a></li>
                     <li><a href="TrotinetterentController.php">Louer</a></li>
-                    <li><a href="piece.php">Pièces</a></li>
+                    <li><a href="PieceController.php">Pièces</a></li>
                     <li><a href="contactus.php" class="active">Contact</a></li>
                 </ul>
             </nav>
