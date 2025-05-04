@@ -14,7 +14,7 @@ class Trotinette {
     }
 
     public function lister(?int $type = null): array {
-        $query = "SELECT t.*, m.Libelle, m.Puissance, m.Autonomie 
+        $query = "SELECT t.*, m.Libelle, m.Puissance, m.Autonomie ,m.Photo
                   FROM Trotinette t
                   JOIN Modele m ON t.IDModele = m.IDModele";
 

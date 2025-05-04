@@ -9,6 +9,10 @@ require_once '../config/database.php';
 require_once  '../models/Trotinette.php';
 require_once  '../controllers/TrotinetteController.php';
 
+
+
+
+
 // Initialize controller and get products
 try {
     $controller = new TROTYY\Controllers\TrotinetteController();
