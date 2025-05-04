@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/css/header.css">
+    <link rel="stylesheet" href="../public/css/header.css">
     <title>Document</title>
 </head>
 
@@ -35,36 +35,36 @@
 <header class="main-header">
     <div class="header-container">
         <div class="logo-container">
-            <div class="logo"><img src="../../public/images/trotty  logo grand-04.png" alt="Trotty Logo"></div>
-            <div class="text-logo"><img src="../../public/images/logotext.png" alt="Trotty"></div>
+            <div class="logo"><img src="../public/images/trotty  logo grand-04.png" alt="Trotty Logo"></div>
+            <div class="text-logo"><img src="../public/images/logotext.png" alt="Trotty"></div>
         </div>
 
         <div class="nav-container">
             <nav class="main-nav">
                 <ul>
-                    <li><a href="../../views/html/dashboardclient/dashbordCP">Accueil</a></li>
-                    <li><a href="../../views/html/sell.php">Acheter</a></li>
-                    <li><a href="../../views/html/location.php">Louer</a></li>
-                    <li><a href="../../views/html/piece.php">Pièces</a></li>
-                    <li><a href="../../views/html/contactus.php" class="active">Contact</a></li>
+                    <li><a href="../views/html/dashboardclient/dashbordCP">Accueil</a></li>
+                    <li><a href="TrotinettesellController.php">Acheter</a></li>
+                    <li><a href="../views/html/location.php">Louer</a></li>
+                    <li><a href="../views/html/piece.php">Pièces</a></li>
+                    <li><a href="../views/html/contactus.php" class="active">Contact</a></li>
                 </ul>
             </nav>
         </div>
 
         <div class="user-actions">
             <div class="user-action">
-                <a href="../../views/html/panier.php">
+                <a href="../views/html/panier.php">
                     <i class="fas fa-shopping-cart icon"></i>
                     <span class="text">Panier</span>
                     <span class="cart-count">3</span>
                 </a>
             </div>
 
-            <?php if ($nom): ?>
+            <?php if (isset($_SESSION['nom'])): ?>
                 <div class="user-action dropdown" id="user-dropdown">
                     <a href="#" class="dropdown-toggle" id="user-name-toggle">
                         <i class="fas fa-user icon"></i>
-                        <span class="text"><?= htmlspecialchars($nom) ?></span>
+                        <span class="text"><?= htmlspecialchars($_SESSION['nom']) ?></span>
                     </a>
                     <div class="dropdown-menu">
                         <a href="profil.php">Mon profil</a>

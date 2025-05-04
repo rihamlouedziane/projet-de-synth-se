@@ -225,7 +225,11 @@
     </style>
 </head>
 <body>
-   <?php include('../views/layout/header1.php'); ?>
+<?php if (isset($_SESSION['client_id'])): ?>
+    <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+<?php else: ?>
+    <?php include('../views/layout/header1.php'); ?>
+<?php endif; ?>
     
     <div class="container">
         <a href="../controllers/TrotinettesellController.php" class="back-link" style="display: inline-block; margin-bottom: 1rem; color: var(--primary-blue); text-decoration: none;">
@@ -293,9 +297,15 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-primary" id="addToCart">
+                <?php if (isset($_SESSION['client_id'])): ?>
+                    <a href="../controllers/PanierController.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-primary">
                         <i class="fas fa-shopping-cart"></i> Ajouter au panier
-                    </button>
+                    </a>
+                        <?php else: ?>
+                            <a href="../controllers/Client/LoginController.php" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                            </a>
+                        <?php endif; ?>
                     <a href="achat.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">
                         <i class="fas fa-credit-card"></i> Acheter maintenant
                     </a>
@@ -304,113 +314,7 @@
         </div>
     </div>
     
-    <script>
-    // Get the initial price from PHP
-    const unitPrice = <?= $product['Tarif'] ?>;
-    const totalPriceElement = document.getElementById('totalPrice');
-    const quantityInput = document.getElementById('quantity');
-    const productId = <?= $product['IDTrotinette'] ?>;
-    const productName = '<?= htmlspecialchars(addslashes($product['Libelle'])) ?>';
-    const productImage = '<?= htmlspecialchars($product['ImageURL'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>';
-
-    // Function to update the total price
-    function updateTotalPrice() {
-        const quantity = parseInt(quantityInput.value);
-        const totalPrice = unitPrice * quantity;
-        totalPriceElement.textContent = formatPrice(totalPrice);
-    }
-
-    // Helper function to format price with spaces (10000 -> 10 000)
-    function formatPrice(price) {
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    }
-
-    // Update price when quantity changes
-    quantityInput.addEventListener('change', updateTotalPrice);
-    quantityInput.addEventListener('input', updateTotalPrice);
-
-    // Update price when plus/minus buttons are clicked
-    document.querySelector('.quantity-btn.minus').addEventListener('click', function() {
-        if (quantityInput.value > 1) {
-            quantityInput.value--;
-            updateTotalPrice();
-        }
-    });
-
-    document.querySelector('.quantity-btn.plus').addEventListener('click', function() {
-        if (quantityInput.value < 10) {
-            quantityInput.value++;
-            updateTotalPrice();
-        }
-    });
-
-    // Add to cart functionality
-    document.getElementById('addToCart').addEventListener('click', function() {
-        const quantity = parseInt(quantityInput.value);
-        const totalPrice = unitPrice * quantity;
-        
-        // Get existing cart items from localStorage or initialize empty array
-        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        
-        // Check if product already exists in cart
-        const existingItemIndex = cartItems.findIndex(item => item.id === productId);
-        
-        if (existingItemIndex !== -1) {
-            // Update quantity if product already in cart
-            cartItems[existingItemIndex].quantity += quantity;
-        } else {
-            // Add new item to cart
-            cartItems.push({
-                id: productId,
-                name: productName,
-                price: unitPrice,
-                quantity: quantity,
-                image: productImage
-            });
-        }
-        
-        // Save updated cart to localStorage
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        
-        // Show success message
-        alert(`Ajouté au panier: ${quantity} x ${productName} (Total: ${formatPrice(totalPrice)} €)`);
-        
-        // Optional: Update cart count in header
-        updateCartCount();
-    });
-
-    // Function to update cart count in header
-    function updateCartCount() {
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-        
-        const cartCountElements = document.querySelectorAll('.cart-count');
-        cartCountElements.forEach(el => {
-            el.textContent = totalItems;
-            el.style.display = totalItems > 0 ? 'inline-block' : 'none';
-        });
-    }
-
-    // Image gallery functionality
-    const thumbnails = document.querySelectorAll('.thumbnail');
-    const mainImage = document.getElementById('mainImage');
     
-    thumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function() {
-            // Remove active class from all thumbnails
-            thumbnails.forEach(t => t.classList.remove('active'));
-            // Add active class to clicked thumbnail
-            this.classList.add('active');
-            // Update main image
-            mainImage.src = this.src;
-        });
-    });
-
-    // Initialize the total price on page load
-    updateTotalPrice();
-    
-    // Update cart count on page load
-    updateCartCount();
 </script>
 </body>
 </html>

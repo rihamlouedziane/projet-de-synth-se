@@ -8,6 +8,7 @@ ini_set('display_errors', 1);
 require_once '../config/database.php';
 require_once '../Models/Trotinette.php';
 require_once '../Controllers/TrotinetteController.php';
+session_start();
 
 // Get product ID from URL
 $productId = $_GET['id'] ?? 0;

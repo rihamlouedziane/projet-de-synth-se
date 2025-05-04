@@ -360,7 +360,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <?php include('../layout/header.php'); ?>
+<?php if (isset($_SESSION['client_id'])): ?>
+    <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+<?php else: ?>
+    <?php include('../views/layout/header1.php'); ?>
+<?php endif; ?>
     
     <section class="cart-hero">
         <div class="container">
@@ -382,8 +386,45 @@
                     </tr>
                 </thead>
                 <tbody id="cartItemsContainer">
-                    <!-- Cart items will be loaded here dynamically -->
-                </tbody>
+    <?php
+    if (!empty($paniers)) {
+        foreach ($paniers as $panier) {
+            $prixTotal = $panier['Quantite'] * $panier['Tarif']; 
+            ?>
+            <tr>
+                <td class="product-cell">
+                    <div class="product-image">
+                        <img src="../public/uploads/image/<?php echo $panier['Photo']; ?>" alt="Image du produit">
+                    </div>
+                    <div class="product-info">
+                        <h4><?php echo $panier['modele_nom']; ?></h4>
+                       
+                    </div>
+                </td>
+                <td class="price"><?php echo number_format($panier['Tarif'], 2, ',', ' '); ?>€</td>
+                <td class="quantity-control">
+                    <button class="quantity-btn">-</button>
+                    <input type="number" class="quantity-input" value="<?php echo $panier['Quantite']; ?>" min="1">
+                    <button class="quantity-btn">+</button>
+                </td>
+                <td class="price"><?php echo number_format($prixTotal, 2, ',', ' '); ?>€</td>
+                <td>
+                <a href="SuprimerPanierController.php?idPanier=<?php echo $panier['IDPanier']; ?>" 
+                    class="remove-link" 
+                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce panier ?');">
+                        <i class="fas fa-trash-alt"></i> Supprimer
+                    </a>
+
+                </td>
+            </tr>
+            <?php
+        }
+    } else {
+        echo '<tr><td colspan="5" class="empty-cart">Votre panier est vide.</td></tr>';
+    }
+    ?>
+</tbody>
+
             </table>
         </div>
         
@@ -415,163 +456,6 @@
         </div>
     </div>
 
-    <script>
-        // Load cart items from localStorage
-        function loadCartItems() {
-            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            const container = document.getElementById('cartItemsContainer');
-            const summarySubtotal = document.getElementById('summarySubtotal');
-            const summaryTotal = document.getElementById('summaryTotal');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            
-            if (cartItems.length === 0) {
-                container.innerHTML = `
-                    <tr>
-                        <td colspan="5" style="text-align: center;">
-                            <div class="empty-cart">
-                                <i class="fas fa-shopping-cart"></i>
-                                <h3>Votre panier est vide</h3>
-                                <p>Parcourez notre catalogue et trouvez la trottinette parfaite pour vous</p>
-                                <a href="sell.php" class="btn">Voir nos produits</a>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                summarySubtotal.textContent = '0€';
-                summaryTotal.textContent = '0€';
-                checkoutBtn.disabled = true;
-                return;
-            }
-            
-            let subtotal = 0;
-            let html = '';
-            
-            cartItems.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-                
-                html += `
-                    <tr>
-                        <td data-label="Produit">
-                            <div class="product-cell">
-                                <div class="product-image">
-                                    <img src="${item.image}" alt="${item.name}">
-                                </div>
-                                <div class="product-info">
-                                    <h4>${item.name}</h4>
-                                    <p>Référence: ${item.id}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td data-label="Prix" class="price">${item.price}€</td>
-                        <td data-label="Quantité">
-                            <div class="quantity-control">
-                                <button class="quantity-btn minus" data-id="${item.id}">-</button>
-                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}">
-                                <button class="quantity-btn plus" data-id="${item.id}">+</button>
-                            </div>
-                        </td>
-                        <td data-label="Total" class="price">${itemTotal}€</td>
-                        <td>
-                            <button class="remove-btn" title="Supprimer" data-id="${item.id}">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            container.innerHTML = html;
-            summarySubtotal.textContent = `${subtotal}€`;
-            summaryTotal.textContent = `${subtotal}€`;
-            checkoutBtn.disabled = false;
-            
-            // Add event listeners to the new elements
-            addCartEventListeners();
-        }
-        
-        function addCartEventListeners() {
-            // Quantity controls
-            document.querySelectorAll('.quantity-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-id');
-                    const input = this.parentNode.querySelector('.quantity-input');
-                    let value = parseInt(input.value);
-                    let cartItems = JSON.parse(localStorage.getItem('cartItems'));
-                    
-                    const itemIndex = cartItems.findIndex(item => item.id.toString() === productId);
-                    
-                    if (this.classList.contains('plus') && value < 10) {
-                        input.value = value + 1;
-                        cartItems[itemIndex].quantity = value + 1;
-                    } else if (this.classList.contains('minus') && value > 1) {
-                        input.value = value - 1;
-                        cartItems[itemIndex].quantity = value - 1;
-                    }
-                    
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                    loadCartItems();
-                    updateCartCount();
-                });
-            });
-            
-            // Quantity input changes
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const productId = this.getAttribute('data-id');
-                    let value = parseInt(this.value);
-                    
-                    if (value < 1) value = 1;
-                    if (value > 10) value = 10;
-                    
-                    this.value = value;
-                    
-                    let cartItems = JSON.parse(localStorage.getItem('cartItems'));
-                    const itemIndex = cartItems.findIndex(item => item.id.toString() === productId);
-                    cartItems[itemIndex].quantity = value;
-                    
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                    loadCartItems();
-                    updateCartCount();
-                });
-            });
-            
-            // Remove item
-            document.querySelectorAll('.remove-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-id');
-                    let cartItems = JSON.parse(localStorage.getItem('cartItems'));
-                    
-                    cartItems = cartItems.filter(item => item.id.toString() !== productId);
-                    
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                    loadCartItems();
-                    updateCartCount();
-                });
-            });
-        }
-        
-        function updateCartCount() {
-            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-            
-            const cartCountElements = document.querySelectorAll('.cart-count');
-            cartCountElements.forEach(el => {
-                el.textContent = totalItems;
-                el.style.display = totalItems > 0 ? 'flex' : 'none';
-            });
-        }
-        
-        // Checkout button
-        document.getElementById('checkoutBtn').addEventListener('click', function() {
-            alert('Redirection vers la page de paiement...');
-        });
-        
-        // Initialize cart on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCartItems();
-            updateCartCount();
-        });
-    </script>
+  
 </body>
 </html>

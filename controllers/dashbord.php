@@ -9,10 +9,10 @@ if (!isset($_SESSION['client_id']) ) {
 
 
 
-require_once '../../models/Client.php';
-require_once '../../models/ClientParticulier.php';
-require_once '../../models/ClientEntreprise.php';
-$db = require_once '../../config/database.php';
+require_once '../models/Client.php';
+require_once '../models/ClientParticulier.php';
+require_once '../models/ClientEntreprise.php';
+$db = require_once '../config/database.php';
 
 
 
@@ -32,7 +32,7 @@ if ($client) {
     extract($clientData);  
 
     
-    require_once '../../views/html/dashboardclient/dashbordCP.php';
+    require_once '../views/html/dashboardclient/dashbordCP.php';
 } else {
     echo "Aucun client trouvé.";
 }

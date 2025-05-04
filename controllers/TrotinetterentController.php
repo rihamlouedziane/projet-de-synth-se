@@ -1,5 +1,6 @@
 <?php
 require_once  '../controllers/TrotinetteController.php';
+session_start();
 
 
 

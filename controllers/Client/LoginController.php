@@ -39,8 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['client_id'] = $client->getId();
                 $_SESSION['client_email'] = $client->getEmail();
                 $_SESSION['type_client'] = $client->getType();
+                $_SESSION['nom'] = $client->getNom();
             
-                header('Location: ../Client/dashbord.php');
+                header('Location: ../dashbord.php');
                 exit;
             }
         }

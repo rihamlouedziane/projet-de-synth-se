@@ -355,7 +355,13 @@
     </style>
 </head>
 <body>
-<?php include('../views/layout/header1.php'); ?>
+<?php if (isset($_SESSION['client_id'])): ?>
+    <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+<?php else: ?>
+    <?php include('../views/layout/header1.php'); ?>
+<?php endif; ?>
+
+
 
 <section class="products-section">
     <div class="section-header">
@@ -431,16 +437,16 @@
                         </div>
                         <div class="product-price"><?= number_format($trott['Tarif'], 0, ',', ' ') ?> €</div>
                         <div class="product-actions">
-                            <button class="btn btn-primary" 
-                                    onclick="event.stopPropagation(); 
-                                             addToCart(
-                                                 <?= $trott['IDTrotinette'] ?>, 
-                                                 '<?= htmlspecialchars(addslashes($trott['Libelle'])) ?>',
-                                                 <?= $trott['Tarif'] ?>,
-                                                 '<?= htmlspecialchars($trott['ImageURL'] ?? 'default-image.jpg') ?>'
-                                             )">
-                                <i class="fas fa-shopping-cart"></i> Ajouter
-                            </button>
+                        <?php if (isset($_SESSION['client_id'])): ?>
+                            <a href="../controllers/PanierController.php?id=<?= $trott['IDTrotinette'] ?>" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                            </a>
+                        <?php else: ?>
+                            <a href="../controllers/Client/LoginController.php" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                            </a>
+                        <?php endif; ?>
+
                             <a href="../controllers/DetailsellController.php?id=<?= $trott['IDTrotinette'] ?>" class="btn btn-secondary" onclick="event.stopPropagation()">
                                 <i class="fas fa-info-circle"></i> Détails
                             </a>
