@@ -52,7 +52,7 @@ if (isset($_SESSION['success'])): ?>
     <div class="alert alert-success" role="alert">
         <?php 
         echo htmlspecialchars($_SESSION['success']);
-        unset($_SESSION['success']); // Supprimer après affichage
+        unset($_SESSION['success']); 
         ?>
     </div>
 <?php endif; ?>

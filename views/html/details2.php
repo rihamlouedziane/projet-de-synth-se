@@ -1,32 +1,3 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Define absolute paths
-$rootPath = dirname(__DIR__, 2);
-
-// Include required files
-require_once $rootPath . '/config/database.php';
-require_once $rootPath . '/Models/Trotinette.php';
-require_once $rootPath . '/Controllers/TrotinetteController.php';
-
-// Get product ID from URL
-$productId = $_GET['id'] ?? 0;
-
-try {
-    $controller = new TROTYY\Controllers\TrotinetteController();
-    $product = $controller->getProductDetails($productId);
-    
-    if (!$product) {
-        throw new Exception("Product not found");
-    }
-} catch (Exception $e) {
-    // Handle errors
-    error_log("Error loading product: " . $e->getMessage());
-    header("Location: sell.php");
-    exit();
-}
-?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -253,10 +224,10 @@ try {
     </style>
 </head>
 <body>
-    <?php include('../layout/header.php'); ?>
+<?php include('../views/layout/header1.php'); ?>
     
     <div class="container">
-        <a href="sell.php" class="back-link" style="display: inline-block; margin-bottom: 1rem; color: var(--primary-blue); text-decoration: none;">
+        <a href="../Controller/TrotinettesrentController.php" class="back-link" style="display: inline-block; margin-bottom: 1rem; color: var(--primary-blue); text-decoration: none;">
             <i class="fas fa-arrow-left"></i> Retour aux produits
         </a>
         

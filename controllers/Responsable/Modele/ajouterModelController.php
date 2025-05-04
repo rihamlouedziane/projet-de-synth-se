@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($model->save($db)) {
                 $_SESSION['success'] = "Ajout réussi !";
-                header('Location: ../dashboardResponsableController.php'); 
+                header('Location: ../indexModelController.php'); 
                 exit;
             } else {
                 $error = "Erreur lors de l'ajout du modèle.";

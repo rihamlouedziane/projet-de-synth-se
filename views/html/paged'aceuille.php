@@ -531,11 +531,10 @@
 </head>
 <body>
 <?php include('../layout/header.php'); ?>
-
     
     <section class="action-section">
         <div class="action-buttons">
-            <a href="sell.html" class="action-btn sale-btn">
+            <a href="sell.php" class="action-btn sale-btn">
                 <div class="btn-content">
                     <h2>Acheter</h2>
                     <p>Possédez votre propre trottinette électrique haut de gamme</p>
@@ -543,7 +542,7 @@
                 </div>
             </a>
             
-            <a href="location.html" class="action-btn rent-btn">
+            <a href="location.php" class="action-btn rent-btn">
                 <div class="btn-content">
                     <h2>Louer</h2>
                     <p>Essai avant achat ou location courte durée</p>
@@ -553,7 +552,7 @@
         </div>
         
         <div class="parts-btn-section">
-            <a href="piece.html" class="parts-btn">
+            <a href="piece.php" class="parts-btn">
                 <div class="btn-content">
                     <h2>Pièces & Accessoires</h2>
                     <p>Trouvez toutes les pièces détachées pour votre trottinette</p>
@@ -591,12 +590,7 @@
                     </div>
                     <div class="product-price">1 299€</div>
                     <div class="product-actions">
-                    <?php if (isset($_SESSION['client_id'])): ?>
-                            <a href="../html/dashboardclient/dashbordCP.php" class="btn btn-primary">Acheter</a>
-                        <?php else: ?>
-                            <a href="../../controllers/Client/LoginController.php" class="btn btn-primary">Acheter</a>
-                        <?php endif; ?>
-
+                        <a href="#" class="btn btn-primary">Acheter</a>
                         <a href="#" class="btn btn-secondary">Détails</a>
                     </div>
                 </div>

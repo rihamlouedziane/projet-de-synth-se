@@ -1,38 +1,4 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-// Define absolute paths
-$rootPath = dirname(__DIR__, 2);
-
-// Include required files
-require_once $rootPath . '/config/database.php';
-require_once $rootPath . '/Models/Trotinette.php';
-require_once $rootPath . '/Controllers/TrotinetteController.php';
-
-// Initialize controller and get products
-try {
-    $controller = new TROTYY\Controllers\TrotinetteController();
-    
-    // Get filter parameters from URL
-    $category = $_GET['category'] ?? 0;
-    $limit = $_GET['limit'] ?? 12; // Default to 12 products
-    
-    // Get filtered products
-    $trottinettes = $controller->getProductsForSale($limit, $category);
-    
-    // Ensure we have an array even if empty
-    if (!is_array($trottinettes)) {
-        $trottinettes = [];
-        error_log("Warning: getProductsForSale() did not return an array");
-    }
-} catch (Exception $e) {
-    // Handle errors gracefully
-    $trottinettes = [];
-    error_log("Error loading products: " . $e->getMessage());
-    $errorMessage = "Error loading products. Please try again later.";
-}
-?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -389,7 +355,7 @@ try {
     </style>
 </head>
 <body>
-<?php include('../layout/header.php'); ?>
+<?php include('../views/layout/header1.php'); ?>
 
 <section class="products-section">
     <div class="section-header">
@@ -475,7 +441,7 @@ try {
                                              )">
                                 <i class="fas fa-shopping-cart"></i> Ajouter
                             </button>
-                            <a href="details.php?id=<?= $trott['IDTrotinette'] ?>" class="btn btn-secondary" onclick="event.stopPropagation()">
+                            <a href="../controllers/DetailsellController.php?id=<?= $trott['IDTrotinette'] ?>" class="btn btn-secondary" onclick="event.stopPropagation()">
                                 <i class="fas fa-info-circle"></i> Détails
                             </a>
                         </div>

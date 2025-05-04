@@ -414,15 +414,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php 
-require_once __DIR__ . '/../../Controllers/TrotinetteController.php';
-use TROTYY\Controllers\TrotinetteController;
-
-$trotinetteController = new TrotinetteController();
-$products = $trotinetteController->getProductsForRent(); // This gets products with type=2 (for rent)
-
-include('../layout/header.php'); 
-?>
+<?php include('../views/layout/header1.php'); ?>
     
     <section class="products-section">
         <div class="section-header">
@@ -505,7 +497,7 @@ include('../layout/header.php');
                     
                     <div class="product-actions">
                         <a href="rent_process.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-primary">Louer maintenant</a>
-                        <a href="details2.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">Détails</a>
+                        <a href="../controllers/DetailsrentController.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">Détails</a>
                     </div>
                 </div>
             </div>

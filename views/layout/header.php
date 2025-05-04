@@ -55,8 +55,8 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="paged'aceuille.php">Accueil</a></li>
-                    <li><a href="sell.php">Acheter</a></li>
-                    <li><a href="location.php">Louer</a></li>
+                    <li><a href="../../controllers/TrotinettesellController.php">Acheter</a></li>
+                    <li><a href="../../controllers/TrotinetterentController.php">Louer</a></li>
                     <li><a href="piece.php">Pièces</a></li>
                     <li><a href="contactus.php" class="active">Contact</a></li>
                 </ul>
@@ -68,7 +68,7 @@
                 <a href="panier.php">
                     <i class="fas fa-shopping-cart icon"></i>
                     <span class="text">Panier</span>
-                    <span class="cart-count">3</span>
+                    <span class="cart-count">0</span>
                 </a>
             </div>
 
