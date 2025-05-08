@@ -410,7 +410,7 @@
             }
         }
     </style>
-    <!-- Font Awesome for icons -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -565,5 +565,7 @@
             });
         });
     </script>
+<?php include('../views/layout/footer.php'); ?>
+
 </body>
 </html>

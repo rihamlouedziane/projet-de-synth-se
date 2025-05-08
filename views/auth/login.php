@@ -79,13 +79,14 @@ if (isset($_SESSION['success'])): ?>
         <button type="submit">Login</button>
 
         <div class="forget-password">
-            <a href="#">Forgot password?</a>
+            <a href="../Client/envoyer_resetController.php">Forgot password?</a>
         </div>
     </form>
 
     <div class="signup">
         <p>Don't have an account? <a href="../Client/ClientController.php">Sign up</a></p>
     </div>
+
 </div>
 </body>
 </html>

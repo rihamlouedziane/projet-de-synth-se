@@ -233,11 +233,11 @@
         
         <div class="product-detail">
             <div class="product-gallery">
-                <img src="<?= htmlspecialchars($product['ImageURL'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" 
+                <img src="../public/uploads/image/<?= htmlspecialchars($product['Photo']?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" 
                      alt="<?= htmlspecialchars($product['Libelle']) ?>" class="main-image" id="mainImage">
                 
                 <div class="thumbnail-container">
-                    <img src="<?= htmlspecialchars($product['ImageURL'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" 
+                    <img src="../public/uploads/image/<?= htmlspecialchars($product['Photo'] ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') ?>" 
                          alt="<?= htmlspecialchars($product['Libelle']) ?>" class="thumbnail active">
                     <!-- Additional thumbnails can be added here -->
                 </div>
@@ -415,5 +415,7 @@
     // Update cart count on page load
     updateCartCount();
 </script>
+<?php include('../views/layout/footer.php'); ?>
+
 </body>
 </html>

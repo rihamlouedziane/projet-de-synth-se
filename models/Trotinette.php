@@ -1,8 +1,5 @@
 <?php
 namespace TROTYY\Models;
-
-
-
 use PDO;
 use PDOException;
 

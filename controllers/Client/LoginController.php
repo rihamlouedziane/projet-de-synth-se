@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['type_client'] = $client->getType();
                 $_SESSION['nom'] = $client->getNom();
             
-                header('Location: ../dashbord.php');
+                header('Location: ../PagedaceuilleContoller.php');
                 exit;
             }
         }
@@ -50,5 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once '../../views/auth/login.php';
 ?>
+
+
+
+
+
 
 

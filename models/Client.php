@@ -1,6 +1,7 @@
 <?php
 require_once 'ClientEntreprise.php';
 require_once 'ClientParticulier.php';
+
 abstract class Client {
     protected $id_client;
     protected $nom;
@@ -68,11 +69,32 @@ abstract class Client {
     public function verifyPassword($password) {
         return password_verify($password, $this->password);
     }
-    
-    
 
     public function setId($id) {
         $this->id_client = $id;
+    }
+
+    // Setters
+    public function setNom($nom) {
+        $this->nom = $nom;
+    }
+
+    public function setAdresse($adresse) {
+        $this->adresse = $adresse;
+    }
+
+    public function setTelephone($telephone) {
+        $this->telephone = $telephone;
+    }
+
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+
+  
+
+    public function setType($type_client) {
+        $this->type_client = $type_client;
     }
 
     abstract public function save($db);

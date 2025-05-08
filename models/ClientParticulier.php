@@ -22,5 +22,32 @@ class ClientParticulier extends Client {
 
         return $stmt->execute();
     }
+
+    public function update($db) {
+        // Supprimer la gestion du mot de passe ici
+        $fields = [
+            'NomClient = :nom',
+            'Adresse = :adresse',
+            'Telephone = :telephone',
+            'Email = :email'
+        ];
+    
+        // Construction de la requête UPDATE
+        $query = "UPDATE client SET " . implode(', ', $fields) . " WHERE IDClient = :idClient";
+        $stmt = $db->prepare($query);
+    
+        // Liaison des variables
+        $stmt->bindValue(':nom', $this->nom);
+        $stmt->bindValue(':adresse', $this->adresse);
+        $stmt->bindValue(':telephone', $this->telephone);
+        $stmt->bindValue(':email', $this->email);
+        $stmt->bindValue(':idClient', $this->id_client);  // Ajouter la liaison du paramètre IDClient
+    
+        // Exécution de la requête
+        return $stmt->execute();
+    }
+    
 }
 ?>
+
+

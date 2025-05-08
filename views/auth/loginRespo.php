@@ -79,7 +79,7 @@ if (isset($_SESSION['success'])): ?>
         <button type="submit">Login</button>
 
         <div class="forget-password">
-            <a href="#">Forgot password?</a>
+            <a href="../controllers/EmailController.php">Forgot password?</a>
         </div>
     </form>
 
@@ -87,5 +87,7 @@ if (isset($_SESSION['success'])): ?>
         <p>Don't have an account? <a href="../controllers/ClientController.php">Sign up</a></p>
     </div>
 </div>
+<?php include('../../views/layout/footer.php'); ?>
+
 </body>
 </html>

@@ -18,4 +18,6 @@ try {
     // Gestion des erreurs de connexion
     die("Connection failed: " . $e->getMessage());
 }
+
+
 ?>

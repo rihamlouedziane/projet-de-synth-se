@@ -304,7 +304,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include('../layout/header.php'); ?>
+<?php if (isset($_SESSION['client_id'])): ?>
+        <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+    <?php else: ?>
+        <?php include('../views/layout/header1.php'); ?>
+    <?php endif; ?>
     
     <section class="contact-hero">
         <h1>Contactez-nous</h1>
@@ -387,5 +391,8 @@
             document.querySelector('.main-nav').classList.toggle('active');
         });
     </script>
+
+<?php include('../views/layout/footer.php'); ?>
+
 </body>
 </html>

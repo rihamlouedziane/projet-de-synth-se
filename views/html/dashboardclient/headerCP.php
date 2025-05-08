@@ -29,6 +29,29 @@
     .user-action.dropdown.active .dropdown-menu {
         display: block; /* Affiche le menu lorsqu'il est activé */
     }
+            /* Style du lien actif */
+.main-nav a.active {
+    color: white;
+    position: relative;
+    font-weight: 600;
+}
+
+.main-nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: white;
+    animation: underline 0.3s ease-out;
+}
+
+@keyframes underline {
+    from { width: 0 }
+    to { width: 100% }
+}
+    
 </style>
 
 <body>
@@ -42,11 +65,12 @@
         <div class="nav-container">
             <nav class="main-nav">
                 <ul>
-                    <li><a href="dashbord.php">Accueil</a></li>
+                    <li><a href="PagedaceuilleContoller.php">Accueil</a></li>
                     <li><a href="TrotinettesellController.php">Acheter</a></li>
                     <li><a href="TrotinetterentController.php">Louer</a></li>
                     <li><a href="PieceController.php">Pièces</a></li>
-                    <li><a href="../views/html/contactus.php" class="active">Contact</a></li>
+                    <li><a href="CommentaireController.php">Commantaire</a></li>
+
                 </ul>
             </nav>
         </div>
@@ -67,7 +91,7 @@
                         <span class="text"><?= htmlspecialchars($_SESSION['nom']) ?></span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="profil.php">Mon profil</a>
+                        <a href="ProfileController.php">Mon profil</a>
                         <a href="commandes.php">Mes commandes</a>
                         <a href="../Controllers/Client/LogoutController.php">Déconnexion</a>
                     </div>
@@ -99,6 +123,36 @@
             dropdown.classList.toggle('active');
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    // Gestion du menu déroulant
+    function toggleDropdown() {
+        var dropdown = document.getElementById("connexionDropdown");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+    }
+
+    // Highlight des liens actifs
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const navLinks = document.querySelectorAll('.main-nav a');
+    
+    navLinks.forEach(link => {
+        const linkPage = link.getAttribute('href').toLowerCase().split('/').pop();
+        if (currentPage === linkPage) {
+            link.classList.add('active');
+        }
+    });
+
+    // Fermer le dropdown en cliquant ailleurs
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.user-action')) {
+            document.getElementById('connexionDropdown').style.display = 'none';
+        }
+    });
+    
+    // Gestion du menu mobile
+    document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+        document.querySelector('.main-nav').classList.toggle('active');
+    });
+});
 </script>
 
 </body>
