@@ -8,6 +8,7 @@ body {
 
 
 
+
 /* Main Content Styles - UPDATED FOR FULL-WIDTH BUTTONS */
 .action-section {
     flex: 1;
@@ -395,6 +396,7 @@ body {
     cursor: pointer;
     padding: 0.5rem;
 }
+
 
 /* Responsive Styles */
 @media (max-width: 1024px) {

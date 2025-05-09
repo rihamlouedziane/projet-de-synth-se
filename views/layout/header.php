@@ -58,7 +58,7 @@
                     <li><a href="../../controllers/TrotinettesellController.php">Acheter</a></li>
                     <li><a href="../../controllers/TrotinetterentController.php">Louer</a></li>
                     <li><a href="piece.php">Pièces</a></li>
-                    <li><a href="contactus.php" class="active">Contact</a></li>
+                  
                 </ul>
             </nav>
         </div>

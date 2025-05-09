@@ -7,18 +7,181 @@
  
     <style>
         
-      
+      .add-comment-link {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.add-comment-btn {
+    background-color: var(--primary-blue); /* Bleu moderne */
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.add-comment-btn:hover {
+    background-color: #0056b3;
+}
+
+.add-comment-btn i {
+    margin-right: 8px;
+}
+
+#commentFormContainer {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.container-form h1 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #666;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.add-comment-btn {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin: 20px 0;
+}
+
+.add-comment-btn:hover {
+    background-color: #0056b3;
+}
+
+.add-comment-btn i {
+    margin-right: 8px;
+}
+
+.add-comment-link {
+    text-align: center;
+    margin: 20px 0;
+}
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #0056b3;
+}
+
+
     </style>
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
 <?php if (isset($_SESSION['client_id'])): ?>
     <?php include('../views/html/dashboardclient/headerCP.php'); ?>
 <?php else: ?>
     <?php include('../views/layout/header1.php'); ?>
 <?php endif; ?>
     
+<!-- Conteneur pour le formulaire de commentaire -->
+
+<div id="commentFormContainer" style="display: none;">
+    <div class="container-form">
+        <button type="button" class="close-btn" onclick="closeCommentForm()">
+            <i class="fas fa-times"></i>
+        </button>
+        <h1>Laissez un commentaire</h1>
+        
+        <!-- Ici ton formulaire -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contenu">Commentaire :</label>
+                <textarea id="contenu" name="contenu" required></textarea>
+            </div>
+
+            <button type="submit">Envoyer le commentaire</button>
+        </form>
+    </div>
+</div>
+
+
     <section class="action-section">
         <div class="action-buttons">
             <a href="sell.php" class="action-btn sale-btn">
@@ -87,6 +250,15 @@
              <p class="no-reviews">Aucun commentaire pour le moment. Soyez le premier à donner votre avis !</p>
          <?php endif; ?>
      </div>
+     <div class="add-comment-link">
+        <a href="#" class="add-comment-btn" onclick="showCommentForm(event)">
+            <i class="fas fa-comment-dots"></i> Ajouter un commentaire
+        </a>
+
+    </div>
+
+  
+
  
      <?php if (count($commentaires) > 3): ?>
          <div class="pagination-controls">
@@ -101,20 +273,11 @@
  </section>
  
  <?php endif; ?> 
+
+
  
 </section>
 
-
-
-
-    <script>
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            document.querySelector('.main-nav').classList.toggle('active');
-        });
-    </script>
-
-<?php include('CommentaireController.php'); ?>
 <?php include('../views/layout/footer.php'); ?>
 
 <script>
@@ -156,6 +319,33 @@
         // Initial setup
         updateVisibility();
     });
+ 
+         // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.main-nav').classList.toggle('active');
+        });
+        
+function showCommentForm(event) {
+    event.preventDefault(); // Empêche le comportement par défaut du lien
+    const formContainer = document.getElementById('commentFormContainer');
+    formContainer.style.display = 'block'; // Afficher le formulaire
+    setTimeout(() => {
+        formContainer.style.opacity = '1'; // Transition de l'opacité pour un effet fluide
+    }, 10);
+}
+
+
+function closeCommentForm() {
+    const formContainer = document.getElementById('commentFormContainer');
+    formContainer.style.opacity = '0'; // Effet de transition
+    setTimeout(() => {
+        formContainer.style.display = 'none'; // Masquer le formulaire après l'animation
+    }, 300);
+}
+
+
+
+
 </script>
 </body>
 

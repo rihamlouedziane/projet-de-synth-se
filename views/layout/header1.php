@@ -80,7 +80,7 @@
                     <li><a href="TrotinettesellController.php">Acheter</a></li>
                     <li><a href="TrotinetterentController.php">Louer</a></li>
                     <li><a href="PieceController.php">Pièces</a></li>
-                    <li><a href="CommentaireController.php">Commantaire</a></li>
+                 
                   
                 </ul>
             </nav>
