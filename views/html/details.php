@@ -222,6 +222,58 @@
                 flex-direction: column;
             }
         }
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-buttons {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .modal-button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .confirm-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        .confirm-btn:hover {
+            background: #27ae60;
+        }
+        .cancel-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        .cancel-btn:hover {
+            background: #c0392b;
+        }
+    
     </style>
 </head>
 <body>
@@ -306,17 +358,79 @@
                                 <i class="fas fa-shopping-cart"></i> Ajouter au panier
                             </a>
                         <?php endif; ?>
-                    <a href="achat.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">
-                        <i class="fas fa-credit-card"></i> Acheter maintenant
-                    </a>
+                    <a href="../controllers/BuyController.php?id=<?= $product['IDTrotinette'] ?>" 
+                   class="btn btn-secondary buy-btn"
+                   data-product-name="<?= htmlspecialchars($product['Libelle']) ?>">
+                    <i class="fas fa-credit-card"></i> Acheter maintenant
+                </a>
+
                 </div>
             </div>
         </div>
     </div>
     
     
-</script>
+<div class="confirmation-modal" id="confirmationModal">
+    <div class="modal-content">
+        <p id="confirmationMessage">Êtes-vous sûr ?</p>
+        <div class="modal-buttons">
+            <button class="modal-button confirm-btn" id="confirmBtn">Oui</button>
+            <button class="modal-button cancel-btn" id="cancelBtn">Annuler</button>
+        </div>
+    </div>
+</div>
+<div class="confirmation-modal" id="confirmationModal">
+    <div class="modal-content">
+        <h3>Confirmer l'achat</h3>
+        <p id="confirmationMessage"></p>
+        <div class="modal-buttons">
+            <button class="modal-button confirm-btn" id="confirmBtn">Confirmer</button>
+            <button class="modal-button cancel-btn" id="cancelBtn">Annuler</button>
+        </div>
+    </div>
+</div>
+
+
+
 <?php include('../views/layout/footer.php'); ?>
 
+
+<script>
+    // Gestion future du modal (non activé actuellement)
+    const buyButtons = document.querySelectorAll('.buy-btn');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmationMessage = document.getElementById('confirmationMessage');
+    let currentHref = '';
+
+    buyButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            currentHref = this.href;
+            const productName = this.dataset.productName;
+            confirmationMessage.textContent = `Êtes-vous sûr de vouloir acheter "${productName}" ?`;
+            confirmationModal.style.display = 'flex';
+        });
+    });
+
+    document.getElementById('confirmBtn')?.addEventListener('click', () => {
+        window.location.href = currentHref;
+    });
+
+    document.getElementById('cancelBtn')?.addEventListener('click', () => {
+        confirmationModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === confirmationModal) {
+            confirmationModal.style.display = 'none';
+        }
+    });
+
+    // Menu mobile
+    document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+        document.querySelector('.main-nav').classList.toggle('active');
+    });
+</script>
 </body>
 </html>
