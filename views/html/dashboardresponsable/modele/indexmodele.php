@@ -63,6 +63,10 @@
       object-fit: cover;
       border-radius: 5px;
     }
+    html, body {
+  overflow: hidden;
+}
+
   </style>
 </head>
 <body>

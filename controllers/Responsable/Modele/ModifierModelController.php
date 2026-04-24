@@ -27,7 +27,8 @@ if (isset($_GET['id'])) {
             'puissance' => $modele['Puissance'],
             'autonomie' => $modele['Autonomie'],
             'type_modele' => $modele['TypeModele'],
-            'photo' =>$modele['Photo']
+            'photo' =>$modele['Photo'],
+            
         ];
     }
 }

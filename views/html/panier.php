@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier - Trotty - Vente et Location de Trottinettes Électriques</title>
     <link rel="stylesheet" href="../public/css/panier.css">
- 
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php if (isset($_SESSION['client_id'])): ?>
-    <?php include('../views/html/dashboardclient/headerCP.php'); ?>
-<?php else: ?>
-    <?php include('../views/layout/header1.php'); ?>
-<?php endif; ?>
-    
+    <?php if (isset($_SESSION['client_id'])): ?>
+        <?php include('../views/html/dashboardclient/headerCP.php'); ?>
+    <?php else: ?>
+        <?php include('../views/layout/header1.php'); ?>
+    <?php endif; ?>
 
     <?php
-    // Calculate totals
+    // Calculate totals from cart items
     $subtotal = 0;
     $total = 0;
     
@@ -27,6 +24,12 @@
             $subtotal += $panier['Quantite'] * $panier['Tarif'];
         }
         $total = $subtotal; // Add shipping costs here if needed
+        
+        // Store totals in session for confirmation
+        $_SESSION['cart_totals'] = [
+            'subtotal' => $subtotal,
+            'total' => $total
+        ];
     }
     ?>
     
@@ -51,37 +54,45 @@
                     </tr>
                 </thead>
                 <tbody id="cartItemsContainer">
-
-                    <?php if (!empty($paniers)) : ?>
-                        <?php foreach ($paniers as $panier) : 
-                            $isPiece = !is_null($panier['IDPiece']);
+                    <?php if (!empty($paniers)): ?>
+                        <?php foreach ($paniers as $panier): 
+                            $isPiece = isset($panier['IDPiece']);
                             $prixTotal = $panier['Quantite'] * $panier['Tarif'];
                         ?>
-                            <tr>
+                            <tr data-id="<?= $panier['IDPanier'] ?>">
                                 <td class="product-cell">
                                     <div class="product-image">
-                                        <img src="../public/uploads/image/<?= htmlspecialchars($panier['modele_photo'] ?? 'default.jpg') ?>" alt="<?= htmlspecialchars($panier['modele_nom']) ?>">
+                                        <img src="../public/uploads/image/<?= htmlspecialchars($panier['modele_photo'] ?? 'default.jpg') ?>" 
+                                             alt="<?= htmlspecialchars($panier['modele_nom'] ?? $panier['piece_reference']) ?>">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="product-info">
                                         <h4>
                                             <?= $isPiece 
-                                                ? $panier['piece_reference'] 
-                                                : $panier['modele_nom'] ?>
+                                                ? htmlspecialchars($panier['piece_reference'])
+                                                : htmlspecialchars($panier['modele_nom']) ?>
                                         </h4>
-                                        <?php if (!$isPiece) : ?>
-                                            <p>Numéro de série : <?= $panier['NumSerie'] ?></p>
+                                        <?php if (!$isPiece): ?>
+                                            <p>Numéro de série : <?= htmlspecialchars($panier['NumSerie']) ?></p>
                                         <?php endif; ?>
                                     </div>
                                 </td>
-                                <td class="price"><?= number_format($panier['Tarif'], 2, ',', ' ') ?>€</td>
-                                <td class="quantity-control">
-                                    <button class="quantity-btn">-</button>
-                                    <input type="number" class="quantity-input" value="<?= $panier['Quantite'] ?>" min="1">
-                                    <button class="quantity-btn">+</button>
+                                <td class="price" data-price="<?= $panier['Tarif'] ?>">
+                                    <?= number_format($panier['Tarif'], 2, ',', ' ') ?>€
                                 </td>
-                                <td class="price"><?= number_format($prixTotal, 2, ',', ' ') ?>€</td>
+                                <td class="quantity-control">
+                                    <form method="post" action="UpdatePanierController.php" class="quantity-form">
+                                        <input type="hidden" name="idPanier" value="<?= $panier['IDPanier'] ?>">
+                                        <button type="submit" name="action" value="decrease" class="quantity-btn">-</button>
+                                        <input type="number" name="quantity" class="quantity-input" 
+                                               value="<?= $panier['Quantite'] ?>" min="1" readonly>
+                                        <button type="submit" name="action" value="increase" class="quantity-btn">+</button>
+                                    </form>
+                                </td>
+                                <td class="price item-total">
+                                    <?= number_format($prixTotal, 2, ',', ' ') ?>€
+                                </td>
                                 <td>
                                     <a href="SuprimerPanierController.php?idPanier=<?= $panier['IDPanier'] ?>" 
                                        class="remove-link" 
@@ -91,7 +102,7 @@
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                    <?php else : ?>
+                    <?php else: ?>
                         <tr>
                             <td colspan="6" class="empty-cart">
                                 <i class="fas fa-shopping-cart"></i>
@@ -111,7 +122,6 @@
                 
                 <div class="summary-row">
                     <span>Sous-total</span>
-
                     <span id="summarySubtotal"><?= number_format($subtotal, 2, ',', ' ') ?>€</span>
                 </div>
                 
@@ -125,7 +135,13 @@
                     <span id="summaryTotal"><?= number_format($total, 2, ',', ' ') ?>€</span>
                 </div>
                 
-                <button class="checkout-btn" id="checkoutBtn">Passer la commande</button>
+                <?php if (!empty($paniers)): ?>
+                    <a href="../controllers/PaiementController.php" class="checkout-btn" id="checkoutBtn">
+                        Passer la commande
+                    </a>
+                <?php else: ?>
+                    <button class="checkout-btn" disabled>Passer la commande</button>
+                <?php endif; ?>
                 
                 <a href="sell.php" class="continue-shopping">
                     <i class="fas fa-arrow-left"></i> Continuer vos achats
@@ -134,85 +150,43 @@
         </div>
     </div>
 
-
-<?php include('../views/layout/footer.php'); ?>
-  
+    <?php include('../views/layout/footer.php'); ?>
 
     <script>
-// Function to update totals when quantity changes
-function updateTotals() {
-    let newSubtotal = 0;
+        // Function to format currency
+        function formatCurrency(amount) {
+            return amount.toFixed(2).replace('.', ',') + '€';
+        }
 
-    // Calculate new subtotal from all items
-    document.querySelectorAll('tbody tr').forEach(row => {
-        if (!row.querySelector('.empty-cart')) {
-            const priceText = row.querySelector('td:nth-child(3)').textContent;
-            const price = parseFloat(priceText.replace(',', '.').replace('€', ''));
-            const quantity = parseInt(row.querySelector('.quantity-input').value);
-            newSubtotal += price * quantity;
+        // Update cart totals when quantity changes (for client-side calculation)
+        function updateCartTotals() {
+            let subtotal = 0;
             
-            // Update row total
-            const rowTotal = price * quantity;
-            row.querySelector('td:nth-child(5)').textContent = rowTotal.toFixed(2).replace('.', ',') + '€';
+            document.querySelectorAll('tbody tr[data-id]').forEach(row => {
+                const price = parseFloat(row.querySelector('.price[data-price]').dataset.price);
+                const quantity = parseInt(row.querySelector('.quantity-input').value);
+                const itemTotal = price * quantity;
+                
+                // Update row total display
+                row.querySelector('.item-total').textContent = formatCurrency(itemTotal);
+                
+                subtotal += itemTotal;
+            });
+            
+            // Update summary
+            document.getElementById('summarySubtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('summaryTotal').textContent = formatCurrency(subtotal);
+            
+            return subtotal;
         }
-    });
 
-    // Save totals to localStorage
-    localStorage.setItem('subtotal', newSubtotal.toFixed(2));
-    localStorage.setItem('total', newSubtotal.toFixed(2)); // You can add shipping costs here if needed
-
-    // Update summary
-    document.getElementById('summarySubtotal').textContent = newSubtotal.toFixed(2).replace('.', ',') + '€';
-    document.getElementById('summaryTotal').textContent = newSubtotal.toFixed(2).replace('.', ',') + '€';
-
-    return newSubtotal;
-}
-
-// Handle quantity button clicks
-document.querySelectorAll('.quantity-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const input = this.parentElement.querySelector('.quantity-input');
-        let quantity = parseInt(input.value);
-        
-        if (this.textContent === '+') {
-            quantity += 1;
-        } else {
-            quantity = Math.max(1, quantity - 1);
-        }
-        
-        input.value = quantity;
-        updateTotals();
-    });
-});
-
-// Handle direct input changes
-document.querySelectorAll('.quantity-input').forEach(input => {
-    input.addEventListener('change', function() {
-        const quantity = Math.max(1, parseInt(this.value) || 1);
-        this.value = quantity;
-        updateTotals();
-    });
-});
-
-// Initialize totals on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const savedSubtotal = localStorage.getItem('subtotal');
-    const savedTotal = localStorage.getItem('total');
-
-    if (savedSubtotal && savedTotal) {
-        document.getElementById('summarySubtotal').textContent = savedSubtotal.replace('.', ',') + '€';
-        document.getElementById('summaryTotal').textContent = savedTotal.replace('.', ',') + '€';
-    } else {
-        updateTotals(); // Ensure totals are calculated if not in localStorage
-    }
-});
-
-document.getElementById('checkoutBtn').addEventListener('click', function() {
-    window.location.href = '../controllers/PaiementController.php';
-});
-
-    
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // If cart is not empty, calculate totals
+            if (document.querySelector('tbody tr[data-id]')) {
+                updateCartTotals();
+            }
+        });
     </script>
-    <?php include('../views/layout/footer.php'); ?>
 </body>
 </html>

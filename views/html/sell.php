@@ -131,7 +131,7 @@
                             <div class="spec-item"><i class="fas fa-bolt"></i> Vitesse: <?= round($trott['Puissance'] / 10) ?> km/h</div>
                             <div class="spec-item"><i class="fas fa-battery-full"></i> Autonomie: <?= htmlspecialchars($trott['Autonomie']) ?> km</div>
                         </div>
-                        <div class="product-price"><?= number_format($trott['Tarif'], 0, ',', ' ') ?> €</div>
+                        <div class="product-price"><?= number_format($trott['Tarif'], 0, ',', ' ') ?> dh</div>
                         <div class="product-actions">
                             <?php if (isset($_SESSION['client_id'])): ?>
                                 <a href="../controllers/BuyController.php?id=<?= $trott['IDTrotinette'] ?>" 

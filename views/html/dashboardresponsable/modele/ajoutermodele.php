@@ -83,6 +83,9 @@ $old_type_modele = isset($_POST['type_modele']) ? $_POST['type_modele'] : '';
     .optional-fields.hidden {
         display: none; /* Hide optional fields */
     }
+        html, body {
+  overflow: hidden;
+}
     </style>
 </head>
 <body>

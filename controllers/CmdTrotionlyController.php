@@ -3,67 +3,107 @@ session_start();
 $pdo = require_once '../config/database.php';
 require_once '../models/Achat.php';
 
-// Initialisation du modèle
 $achatModel = new AchatModel($pdo);
 
+print_r($_SESSION['achat']);
 try {
-    // Vérification si la session achat existe
     if (!isset($_SESSION['achat'])) {
         throw new Exception("Session invalide");
     }
 
-    // Récupération des données de la session
     $achat = $_SESSION['achat'];
-    $quantite = $achat['quantite'];
+    $quantite = $achat['quantite'] ?? 1;
 
-    // Vérification de l'existence de la trottinette
+    // Récupération des données produit
     $trotinette = $achatModel->getTrottinette($achat['trottinette_id']);
-    if (!$trotinette) {
-        throw new Exception("Trottinette non trouvée.");
-    }
+    if (!$trotinette) throw new Exception("Trottinette non trouvée");
+    if ($trotinette['Quantite'] < $quantite) throw new Exception("Stock insuffisant");
 
-    // Vérification de la quantité disponible
-    if ($trotinette['Quantite'] < $quantite) {
-        throw new Exception("Stock insuffisant.");
-    }
-
-    $prix = $trotinette['Tarif'];
     $pdo->beginTransaction();
 
-    // Vérification si le client est connecté
+    // Gestion du client
+    $clientData = [];
+    $isNewClient = false;
+
     if (isset($_SESSION['client_id'])) {
+        // Client existant
         $clientId = $_SESSION['client_id'];
-    } else {
-        // Création du client si non connecté
-        if (!isset($achat['nom'], $achat['adresse'], $achat['telephone'])) {
-            throw new Exception("Données client manquantes.");
+        $clientFromDB = $achatModel->getClientById($clientId);
+        
+        if (!$clientFromDB) {
+            throw new Exception("Client introuvable en base de données");
         }
-        $clientId = $achatModel->createClient($achat['nom'], $achat['adresse'], $achat['telephone']);
+
+        $clientData = [
+            'id' => $clientId,
+            'nom' => $clientFromDB['NomClient'],
+            'adresse' => $clientFromDB['Adresse'],
+            'telephone' => $clientFromDB['Telephone']
+        ];
+
+    } else {
+        // Nouveau client
+        if (!isset($achat['nom'], $achat['adresse'], $achat['telephone'])) {
+            throw new Exception("Données client manquantes");
+        }
+
+        $clientId = $achatModel->createClient(
+            $achat['nom'], 
+            $achat['adresse'], 
+            $achat['telephone']
+        );
+
+        $clientData = [
+            'id' => $clientId,
+            'nom' => $achat['nom'],
+            'adresse' => $achat['adresse'],
+            'telephone' => $achat['telephone']
+        ];
+
+        $isNewClient = true;
+        $_SESSION['is_new_client'] = true; // Stockage en session
     }
 
     // Création de la commande
-    $total = $prix * $quantite;
+    $total = $trotinette['Tarif'] * $quantite;
     $commandeId = $achatModel->createCommande($clientId, $total);
-
-    // Insertion de la ligne de commande
-    $achatModel->createLigneCommande($commandeId, $achat['trottinette_id'], $prix);
-
-    // Mise à jour du stock
+    $achatModel->createLigneCommande($commandeId, $achat['trottinette_id'], $trotinette['Tarif']);
     $achatModel->updateStock($achat['trottinette_id'], $quantite);
 
-    // Commit de la transaction
-    $pdo->commit();
-    unset($_SESSION['achat']); // Suppression des données de session
+    // Préparation des données pour la vue
+    $_SESSION['invoice_data'] = [
+        'commande' => [
+            'id' => $commandeId,
+            'date' => date('d/m/Y H:i'),
+            'total' => $total
+        ],
+        'client' => $clientData,
+        'produit' => [
+            'id' => $trotinette['IDTrotinette'],
+            'nom' => $trotinette['Libelle'],
+            'prix' => $trotinette['Tarif'],
+            'quantite' => $quantite
+        ]
+    ];
 
-    // Redirection vers la page de confirmation
-    header('Location: ../views/html/confirmationonly.php');
-    exit;
-} catch (Exception $e) {
-    // En cas d'erreur, rollback de la transaction
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
+    $pdo->commit();
+    unset($_SESSION['achat']);
+
+    // Nettoyage session SI client créé (même après redirection)
+    if ($isNewClient) {
+        unset(
+            $_SESSION['client_id'], 
+            $_SESSION['client_data'],
+            $_SESSION['is_new_client']
+        );
+         // Détachement de la session
     }
 
+    header('Location: ../views/html/confirmationonly.php');
+    exit;
+
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
     $_SESSION['error'] = "Erreur : " . $e->getMessage();
     header('Location: ../views/html/achete.php');
     exit;

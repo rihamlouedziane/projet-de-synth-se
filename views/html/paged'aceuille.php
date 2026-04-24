@@ -184,7 +184,7 @@ button[type="submit"]:hover {
 
     <section class="action-section">
         <div class="action-buttons">
-            <a href="sell.php" class="action-btn sale-btn">
+            <a href="TrotinettesellController.php" class="action-btn sale-btn">
                 <div class="btn-content">
                     <h2>Acheter</h2>
                     <p>Possédez votre propre trottinette électrique haut de gamme</p>
@@ -192,7 +192,7 @@ button[type="submit"]:hover {
                 </div>
             </a>
             
-            <a href="location.php" class="action-btn rent-btn">
+            <a href="trotinetterentController.php" class="action-btn rent-btn">
                 <div class="btn-content">
                     <h2>Louer</h2>
                     <p>Essai avant achat ou location courte durée</p>
@@ -202,7 +202,7 @@ button[type="submit"]:hover {
         </div>
         
         <div class="parts-btn-section">
-            <a href="piece.php" class="parts-btn">
+            <a href="piececontroller.php" class="parts-btn">
                 <div class="btn-content">
                     <h2>Pièces & Accessoires</h2>
                     <p>Trouvez toutes les pièces détachées pour votre trottinette</p>

@@ -449,10 +449,10 @@
                 <div class="filter-group">
                     <h3>Prix journalier</h3>
                     <div class="filter-options">
-                        <div class="filter-option">Moins de 20€</div>
-                        <div class="filter-option">20-30€</div>
-                        <div class="filter-option">30-40€</div>
-                        <div class="filter-option">Plus de 40€</div>
+                        <div class="filter-option">Moins de 20dh</div>
+                        <div class="filter-option">20-30dh</div>
+                        <div class="filter-option">30-40dh</div>
+                        <div class="filter-option">Plus de 40dh</div>
                     </div>
                 </div>
                 
@@ -486,7 +486,7 @@
                        
                     </div>
                     
-                    <div class="daily-price">Prix journalier: <strong><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>€</strong></div>
+                    <div class="daily-price">Prix journalier: <strong><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>dh</strong></div>
                     
                     <div class="rental-controls">
                         <div class="days-control">
@@ -497,11 +497,13 @@
                         <span>jour(s)</span>
                     </div>
                     
-                    <div class="rental-price"><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>€</div>
+                    <div class="rental-price"><?= htmlspecialchars($product['Tarif'] ?? 'N/A') ?>dh</div>
                     
                     <div class="product-actions">
                     <?php if (isset($_SESSION['client_id'])): ?>
-                        <a href="rent_process.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-primary">Louer maintenant</a>
+                        <button id="Btn-RentNow" class="btn btn-secondary">
+                        <i class="fas fa-credit-card"></i> louer maintenant
+                    </button>
                         <?php else: ?>
                             <a href="../controllers/Client/LoginController.php" class="btn btn-primary">
                                 <i class="fas fa-shopping-cart"></i> Louer maintenant
@@ -517,55 +519,86 @@
     </section>
 
     <script>
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
-            document.querySelector('.main-nav').classList.toggle('active');
-        });
+    // Mobile menu toggle
+    document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+        document.querySelector('.main-nav').classList.toggle('active');
+    });
 
-        // Filter functionality
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove active class from all options in the same group
-                this.parentNode.querySelectorAll('.filter-option').forEach(opt => {
-                    opt.classList.remove('active');
-                });
-                
-                // Add active class to clicked option
-                this.classList.add('active');
+    // Filter functionality
+    document.querySelectorAll('.filter-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active class from all options in the same group
+            this.parentNode.querySelectorAll('.filter-option').forEach(opt => {
+                opt.classList.remove('active');
             });
+            
+            // Add active class to clicked option
+            this.classList.add('active');
         });
+    });
 
+    // Rental days controls and handlers
+    document.querySelectorAll('.product-card').forEach(card => {
         // Rental days controls
-        document.querySelectorAll('.product-card').forEach(card => {
-            const minusBtn = card.querySelector('.minus-btn');
-            const plusBtn = card.querySelector('.plus-btn');
-            const daysValue = card.querySelector('.days-value');
-            const rentalPrice = card.querySelector('.rental-price');
-            const dailyPriceText = card.querySelector('.daily-price strong');
-            const dailyPrice = parseFloat(dailyPriceText.textContent.replace('€', ''));
-            
-            let days = 1;
-            
-            function updatePrice() {
-                const totalPrice = days * dailyPrice;
-                rentalPrice.textContent = totalPrice + '€';
-                daysValue.textContent = days;
-            }
-            
-            minusBtn.addEventListener('click', function() {
-                if (days > 1) {
-                    days--;
-                    updatePrice();
-                }
-            });
-            
-            plusBtn.addEventListener('click', function() {
-                days++;
+        const minusBtn = card.querySelector('.minus-btn');
+        const plusBtn = card.querySelector('.plus-btn');
+        const daysValue = card.querySelector('.days-value');
+        const rentalPrice = card.querySelector('.rental-price');
+        const dailyPriceText = card.querySelector('.daily-price strong');
+        const dailyPrice = parseFloat(dailyPriceText.textContent.replace('dh', ''));
+        
+        let days = 1;
+        
+        function updatePrice() {
+            const totalPrice = days * dailyPrice;
+            rentalPrice.textContent = totalPrice + 'dh';
+            daysValue.textContent = days;
+        }
+        
+        minusBtn.addEventListener('click', function() {
+            if (days > 1) {
+                days--;
                 updatePrice();
-            });
+            }
         });
-    </script>
-<?php include('../views/layout/footer.php'); ?>
+        
+        plusBtn.addEventListener('click', function() {
+            days++;
+            updatePrice();
+        });
+        
+        // Rental button handler - for logged-in users
+        const rentBtn = card.querySelector('.btn-secondary');
+        if (rentBtn) {
+            rentBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get product data from this specific card
+                const productName = card.querySelector('.product-title').textContent;
+                const productImage = card.querySelector('.product-image img').src;
+                const productId = card.querySelector('a[href*="DetailsrentController.php"]').href.split('id=')[1];
+                
+                // Store product data in localStorage
+                const productData = {
+                    id: productId,
+                    name: productName,
+                    price: dailyPrice,
+                    image: productImage,
+                    days: days  // Current selected days
+                };
+                
+                localStorage.setItem('selectedProduct', JSON.stringify(productData));
+                localStorage.setItem('fromProductDetail', 'true');
+                
+                // Redirect to reservation page
+                window.location.href = '../views/html/reservation.php';
+            });
+        }
+    });
+
+    // Remove the global handleRental function and related variables
+    // as they're now handled within the product card loop
+</script>
 
 </body>
 </html>

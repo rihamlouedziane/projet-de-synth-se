@@ -1,3 +1,6 @@
+<?php
+  session_start(); // à mettre tout en haut du fichier s'il n'y est pas déjà
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -134,29 +137,58 @@
         transform: translateX(0);
       }
     }
+        html, body {
+  overflow: hidden;
+}
+  .back-button {
+        background-color: var(--primary-yellow);
+        color: var(--primary-blue);
+        padding: 8px 15px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .back-button:hover {
+        background-color: #ffcc00;
+        transform: translateX(-3px);
+    }
+
+    @media (max-width: 768px) {
+        .back-button {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+    }
   </style>
 </head>
 
 <body>
   <!-- Header -->
   <header>
-    <div style="display: flex; align-items: center;">
-      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-      <h1>Mon Application</h1>
-    </div>
-    <?php if (isset($nom)) : ?>
-      <div class="user-info">👤 <?= htmlspecialchars($nom) ?></div>
+<!-- Ajoutez ce bouton dans la section header -->
+<header>
+    <a href="../../PagedaceuilleContoller.php" class="back-button">⬅ Retour</a>
+    
+    <?php if (isset($_SESSION['responsable_nom'])) : ?>
+    <div class="user-info">👤 <?= htmlspecialchars($_SESSION['responsable_nom']) ?></div>
     <?php else : ?>
-      <div class="user-info">👤 Nom d'utilisateur</div>
+    <div class="user-info">👤 Nom d'utilisateur</div>
     <?php endif; ?>
+</header>
+
   </header>
 
   <!-- Menu latéral -->
   <nav class="sidebar" id="sidebar">
-    <a href="ou.php">🏠 Accueil</a>
-    <a href="indexpiece.php">📦 Pièces</a>
-    <a href="">🛴 Trottinettes</a>
-    <a href="../Responsable/Modele/indexmodelController.php">🧩 Modèles</a>
+    <a href="">🏠 Accueil</a>
+    <a href="#">📦 Pièces</a>
+    <a href="#">🛴 Trottinettes</a>
+    <a href="Modele/indexmodelController.php">🧩 Modèles</a>
     <a href="#">⚙️ Paramètres</a>
   </nav>
 

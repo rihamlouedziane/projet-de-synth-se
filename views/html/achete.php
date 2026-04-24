@@ -1,259 +1,124 @@
-<?php session_start(); ?>
+ <?php session_start() ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Informations client</title>
     <style>
         :root {
-    --primary-blue: #0a2463;
-    --primary-yellow: #FFD700;
-    --white: #ffffff;
-    --light-gray: #f8f9fa;
-    --dark-gray: #333;
-}
+            --primary-blue: #0a2463;
+            --primary-yellow: #FFD700;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 0;
+        }
 
-.main-header {
-    background-color: var(--white);
-    box-shadow: 0 4px 20px rgba(10, 36, 99, 0.1);
-    padding: 0.8rem 1.2rem; 
-    position: relative;
-}
-
-.header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem; 
-}
-
-.logo img {
-    max-width: 130px;
-    height: auto;
-    margin-left: -40%; 
-}
-
-.text-logo img {
-    max-width: 130px;
-    height: auto;
-    margin-left: -70%; 
-}
-
-.nav-container {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.main-nav {
-    display: flex;
-    align-items: center;
-}
-
-.main-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 0.8rem; 
-    margin: 0;
-    padding: 0;
-}
-
-.main-nav a {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem; 
-    padding: 0.4rem 0.8rem; 
-    border-radius: 50px;
-    transition: all 0.3s ease;
-}
-
-.main-nav a:hover, 
-.main-nav a.active {
-    background-color: var(--primary-blue);
-    color: var(--white);
-}
-
-/* User Actions */
-.user-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem; 
-    margin-left: 60%; 
-}
-
-.user-action {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.user-action a {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.2rem; 
-    padding: 0.2rem 0.6rem; 
-    border-radius: 50px;
-    transition: all 0.3s ease;
-}
-
-.user-action a:hover {
-    background-color: rgba(10, 36, 99, 0.1);
-}
-
-.cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: var(--primary-yellow);
-    color: var(--dark-gray);
-    border-radius: 50%;
-    width: 16px; 
-    height: 16px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.65rem; 
-    font-weight: 700;
-}
-
-.icon {
-    font-size: 1.1rem; 
-}
-
-/* Mobile Header Styles */
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: var(--primary-blue);
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
-/* Responsive for header */
-@media (max-width: 768px) {
-    .header-container {
-        padding: 0.8rem; 
-    }
-    
-    .nav-container {
-        position: static;
-        transform: none;
-        width: 100%;
-    }
-    
-    .main-nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: var(--white);
-        padding: 0.8rem; 
-        display: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        z-index: 1000;
-    }
-    
-    .main-nav.active {
-        display: block;
-    }
-    
-    .main-nav ul {
-        flex-direction: column;
-        gap: 0.4rem;
-    }
-    
-    .main-nav a {
-        display: block;
-        text-align: center;
-    }
-    
-    .mobile-menu-btn {
-        display: block;
-    }
-
-    .user-actions {
-        margin-left: auto;
-    }
-}
-
-
-        .form-container {
-            max-width: 500px;
-            margin: 2rem auto;
+        .container {
+            max-width: 800px;
+            margin: 3rem auto;
             padding: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+
+        .reservation-form {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
+
         label {
             display: block;
             margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
         }
-        input {
+
+        input[type="text"],
+        input[type="tel"] {
             width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
         }
-        .error { color: red; }
+
+        .btn {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #1a3a8f;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-  
+    <div class="container">
+        <div class="reservation-form">
+            <h2 class="form-title">Informations client</h2>
+
+            <?php if(isset($_SESSION['error'])): ?>
+                <div class="error"><?= $_SESSION['error']; unset($_SESSION['error']) ?></div>
+            <?php endif; ?>
+
+            <form action="../../controllers/AcheteController.php" method="post" onsubmit="return confirmAchat();">
+            <input type="hidden" name="trottinette_id" value="<?= isset($_SESSION['achat_temp']['trottinette_id']) ? htmlspecialchars($_SESSION['achat_temp']['trottinette_id']) : '' ?>">
 
 
-    <div class="form-container">
-        <h2>Informations client</h2>
-        <?php if(isset($_SESSION['error'])): ?>
-            <div class="error"><?= $_SESSION['error']; unset($_SESSION['error']) ?></div>
-        <?php endif; ?>
-        
-       <form action="../../controllers/AcheteController.php" method="post" onsubmit="return confirmAchat();">
+                <div class="form-group">
+                    <label for="nom">Nom complet *</label>
+                    <input type="text" name="nom" id="nom" required>
+                </div>
 
-       
-            <input type="hidden" name="trottinette_id" value="<?= htmlspecialchars($_SESSION['achat_temp'] ?? '') ?>">
-            
-            <div class="form-group">
-                <label>Nom complet *</label>
-                <input type="text" name="nom" required>
-            </div>
+                <div class="form-group">
+                    <label for="adresse">Adresse *</label>
+                    <input type="text" name="adresse" id="adresse" required>
+                </div>
 
-            <div class="form-group">
-                <label>Adresse *</label>
-                <input type="text" name="adresse" required>
-            </div>
+                <div class="form-group">
+                    <label for="telephone">Téléphone *</label>
+                    <input type="tel" name="telephone" id="telephone" pattern="[0-9]{10}" required>
+                </div>
 
-            <div class="form-group">
-                <label>Téléphone *</label>
-                <input type="tel" name="telephone" pattern="[0-9]{10}" required>
-            </div>
-
-            <button type="submit">Confirmer la commande</button>
-        </form>
+                <button type="submit" class="btn">Confirmer la commande</button>
+            </form>
+        </div>
     </div>
-</body>
 
+    
+</body>
 </html>

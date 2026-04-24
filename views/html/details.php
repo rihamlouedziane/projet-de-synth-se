@@ -307,8 +307,8 @@
                     <div class="badge badge-yellow">Best Seller</div>
                 <?php endif; ?>
                 
-                <div class="product-price"><?= number_format($product['Tarif'], 0, ',', ' ') ?> €</div>
-                <div class="total-price">Total: <span id="totalPrice"><?= number_format($product['Tarif'], 0, ',', ' ') ?></span> €</div>
+                <div class="product-price"><?= number_format($product['Tarif'], 0, ',', ' ') ?> dh</div>
+                <div class="total-price">Total: <span id="totalPrice"><?= number_format($product['Tarif'], 0, ',', ' ') ?></span> dh</div>
                 
                 <div class="product-description">
                     <p><?= nl2br(htmlspecialchars($product['Description'] ?? 'Trottinette électrique haut de gamme offrant performance et confort.')) ?></p>

@@ -250,8 +250,8 @@
                     <div class="badge badge-yellow">Best Seller</div>
                 <?php endif; ?>
                 
-                <div class="product-price"><?= number_format($product['Tarif'], 0, ',', ' ') ?> €</div>
-                <div class="total-price">Total: <span id="totalPrice"><?= number_format($product['Tarif'], 0, ',', ' ') ?></span> €</div>
+                <div class="product-price"><?= number_format($product['Tarif'], 0, ',', ' ') ?> dh</div>
+                <div class="total-price">Total: <span id="totalPrice"><?= number_format($product['Tarif'], 0, ',', ' ') ?></span> dh</div>
                 
                 <div class="product-description">
                     <p><?= nl2br(htmlspecialchars($product['Description'] ?? 'Trottinette électrique haut de gamme offrant performance et confort.')) ?></p>
@@ -293,12 +293,12 @@
                 
                 <div class="action-buttons">
                 <?php if (isset($_SESSION['client_id'])): ?>
-                    <a href="achat.php?id=<?= $product['IDTrotinette'] ?>" class="btn btn-secondary">
-                        <i class="fas fa-credit-card"></i> Acheter maintenant
-                    </a>
+                    <button id="Btn-RentNow" class="btn btn-secondary">
+                        <i class="fas fa-credit-card"></i> louer maintenant
+                    </button>
                         <?php else: ?>
-                            <a href="../controllers/Client/LoginController.php" class="btn btn-secondary">
-                                <i class="fas fa-credit-card"></i>  Acheter maintenant
+                            <a href="/Client/LoginController.php" class="btn btn-secondary">
+                                <i class="fas fa-credit-card"></i>  louer maintenant
                             </a>
                         <?php endif; ?>
                   
@@ -348,7 +348,7 @@
     });
 
     // Add to cart functionality
-    document.getElementById('addToCart').addEventListener('click', function() {
+   /* document.getElementById('addToCart').addEventListener('click', function() {
         const quantity = parseInt(quantityInput.value);
         const totalPrice = unitPrice * quantity;
         
@@ -380,7 +380,7 @@
         
         // Optional: Update cart count in header
         updateCartCount();
-    });
+    });*/
 
     // Function to update cart count in header
     function updateCartCount() {
@@ -414,6 +414,24 @@
     
     // Update cart count on page load
     updateCartCount();
+     // Dans votre page de détail (produit.php), modifiez le lien/bouton de réservation
+    document.getElementById('Btn-RentNow').addEventListener('click', handleRental);
+    function handleRental() {
+    // Store product data in localStorage
+    const productData = {
+        id: productId,
+        name: productName,
+        price: unitPrice,
+        image: productImage,
+        days: parseInt(quantityInput.value) // Add days from quantity input
+    };
+    
+    localStorage.setItem('selectedProduct', JSON.stringify(productData));
+    localStorage.setItem('fromProductDetail', 'true');
+    
+    // Redirect to reservation page
+    window.location.href='../views/html/reservation.php';
+};
 </script>
 <?php include('../views/layout/footer.php'); ?>
 

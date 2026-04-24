@@ -87,7 +87,7 @@ if (isset($_SESSION['success'])): ?>
         <p>Don't have an account? <a href="../controllers/ClientController.php">Sign up</a></p>
     </div>
 </div>
-<?php include('../../views/layout/footer.php'); ?>
+
 
 </body>
 </html>

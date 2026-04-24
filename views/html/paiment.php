@@ -27,6 +27,10 @@
             $subtotal += $panier['Quantite'] * $panier['Tarif'];
         }
         $total = $subtotal; // Add shipping costs here if needed
+         $_SESSION['cart_totals'] = [
+            'subtotal' => $subtotal,
+            'total' => $total
+        ];
     }
     ?>
     

@@ -14,29 +14,26 @@ class Modele {
         $this->Photo       = $Photo;  
     }
 
-    public function save($db) {
-        // Si certaines propriétés ne sont pas définies, les initialiser à NULL
-        $puissance = isset($this->Puissance) ? $this->Puissance : null;
-        $autonomie = isset($this->Autonomie) ? $this->Autonomie : null;
-        $typeModele = isset($this->TypeModele) ? $this->TypeModele : null;
-        $photo = isset($this->Photo) ? $this->Photo : null; // S'assurer que Photo est définie
+  public function save($db) {
+    $puissance = isset($this->Puissance) ? $this->Puissance : null;
+    $autonomie = isset($this->Autonomie) ? $this->Autonomie : null;
+    $typeModele = isset($this->TypeModele) ? $this->TypeModele : null;
+    $photo = isset($this->Photo) ? $this->Photo : '';
 
-        // Si le champ photo est null, ne pas insérer NULL, insérer une chaîne vide si pas de photo
-        $photoToInsert = $photo ?: '';
+    $stmt = $db->prepare("INSERT INTO modele 
+        (Libelle, Puissance, Autonomie, TypeModele, Photo) 
+        VALUES (:libelle, :puissance, :autonomie, :type_modele, :photo)");
 
-        // Préparer la requête d'insertion
-        $stmt = $db->prepare("INSERT INTO modele 
-            (Libelle, Puissance, Autonomie, TypeModele, Photo) 
-            VALUES (:libelle, :puissance, :autonomie, :type, :photo)");
+    // Liaison des paramètres avec les types appropriés
+    $stmt->bindValue(':libelle', $this->Libelle, PDO::PARAM_STR);
+    $stmt->bindValue(':puissance', $puissance, is_numeric($puissance) ? PDO::PARAM_INT : PDO::PARAM_NULL);
+    $stmt->bindValue(':autonomie', $autonomie, is_numeric($autonomie) ? PDO::PARAM_INT : PDO::PARAM_NULL);
+    $stmt->bindValue(':type_modele', $typeModele, PDO::PARAM_STR);
+    $stmt->bindValue(':photo', $photo, PDO::PARAM_STR);
 
-        $stmt->bindValue(':libelle', $this->Libelle);
-        $stmt->bindValue(':puissance', $puissance, PDO::PARAM_NULL);  // NULL si non défini
-        $stmt->bindValue(':autonomie', $autonomie, PDO::PARAM_NULL);  // NULL si non défini
-        $stmt->bindValue(':type', $typeModele, PDO::PARAM_NULL);      // NULL si non défini
-        $stmt->bindValue(':photo', $photoToInsert);  // Insérer une chaîne vide si photo est NULL
-
-        return $stmt->execute();
-    }
+    return $stmt->execute();
+}
+  
   
     // Récupérer tous les modèles
     public static function index($db) {
@@ -53,26 +50,25 @@ class Modele {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function update($db, $id, $libelle, $puissance, $autonomie, $type_modele, $photo) {
-        $sql = "UPDATE modele 
-                SET Libelle = :libelle, 
-                    Puissance = :puissance, 
-                    Autonomie = :autonomie, 
-                    TypeModele = :type_modele, 
-                    Photo = :photo 
-                WHERE IDModele = :id";
-    
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':libelle', $libelle);
-        $stmt->bindParam(':puissance', $puissance);
-        $stmt->bindParam(':autonomie', $autonomie);
-        $stmt->bindParam(':type_modele', $type_modele);
-        $stmt->bindParam(':photo', $photo);
-        $stmt->bindParam(':id', $id);
-    
-        return $stmt->execute();
-    }
-    
+   public static function update($db, $id, $libelle, $puissance, $autonomie, $type_modele, $photo) {
+    $sql = "UPDATE modele 
+            SET Libelle = :libelle, 
+                Puissance = :puissance, 
+                Autonomie = :autonomie, 
+                TypeModele = :type_modele, 
+                Photo = :photo 
+            WHERE IDModele = :id";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':libelle', $libelle);
+    $stmt->bindParam(':puissance', $puissance);
+    $stmt->bindParam(':autonomie', $autonomie);
+    $stmt->bindParam(':type_modele', $type_modele);
+    $stmt->bindParam(':photo', $photo);
+    $stmt->bindParam(':id', $id);
+
+    return $stmt->execute();
+}
 
     
     public static function delete($db, $id) {

@@ -2,6 +2,16 @@
 if(!isset($_SESSION['client_id'])) {
     session_start();
 }
+
+// Display success/error messages
+if (isset($_SESSION['error'])) {
+    echo '<div class="alert alert-danger" style="padding: 15px; margin: 20px; background: #f8d7da; color: #721c24; border-radius: 5px;">' . $_SESSION['error'] . '</div>';
+    unset($_SESSION['error']);
+}
+if (isset($_SESSION['success'])) {
+    echo '<div class="alert alert-success" style="padding: 15px; margin: 20px; background: #d4edda; color: #155724; border-radius: 5px;">' . $_SESSION['success'] . '</div>';
+    unset($_SESSION['success']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,6 +20,8 @@ if(!isset($_SESSION['client_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réservation de Trotinette - Trotty</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../public/css/header.css">
+
     <style>
         :root {
             --primary-blue: #2a4b8d;
@@ -143,45 +155,111 @@ if(!isset($_SESSION['client_id'])) {
                 gap: 0;
             }
         }
-        :root {
-            --primary-blue: #2a4b8d;
-            --primary-yellow: #f5a623;
-            --white: #ffffff;
-            --light-gray: #f5f5f5;
-            --dark-gray: #333333;
+        
+        .alert {
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: var(--light-gray);
-            margin: 0;
-            padding: 0;
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
         }
-        
-        .reservation-form {
-            background: var(--white);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
+
+        /* Ajouter ces styles */
+.user-action.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: var(--dark-gray);
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background: var(--light-gray);
+}
+
+/* Quand le dropdown est actif */
+.dropdown.active .dropdown-menu {
+    display: block;
+}
     </style>
 </head>
 <body>
-<?php if (isset($_SESSION['client_id'])): ?>
-    <?php include('dashboardclient/headerCP.php'); ?>
-<?php else: ?>
-    <?php include('../views/layout/header1.php'); ?>
-<?php endif; ?>
-    
+<header class="main-header">
+    <div class="header-container">
+        <div class="logo-container">
+            <div class="logo"><img src="../../public/images/trotty  logo grand-04.png" alt="Trotty Logo"></div>
+            <div class="text-logo"><img src="../../public/images/logotext.png" alt="Trotty"></div>
+        </div>
+
+        <div class="nav-container">
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../../Controllers/PagedaceuilleContoller.php">Accueil</a></li>
+                    <li><a href="../../Controllers/TrotinettesellController.php">Acheter</a></li>
+                    <li><a href="../../Controllers/TrotinetterentController.php">Louer</a></li>
+                    <li><a href="../../Controllers/PieceController.php">Pièces</a></li>
+             
+
+                </ul>
+            </nav>
+        </div>
+
+        <div class="user-actions">
+            <div class="user-action">
+                <a href="IndexPanierController.php">
+                    <i class="fas fa-shopping-cart icon"></i>
+                    <span class="text">Panier</span>
+                    <span class="cart-count">3</span>
+                </a>
+            </div>
+
+            <?php if (isset($_SESSION['nom'])): ?>
+               <div class="user-action dropdown">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fas fa-user icon"></i>
+                    <span class="text"><?= htmlspecialchars($_SESSION['nom'] ?? '') ?></span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="../../Controllers/ProfileController.php">Mon profil</a>
+                    <a href="commandes.php">Mes commandes</a>
+                    <a href="../../Controllers/Client/LogoutController.php">Déconnexion</a>
+                </div>
+            </div>
+            <?php else: ?>
+                <div class="user-action">
+                    <a href="../../controllers/LoginController.php">
+                        <i class="fas fa-user icon"></i>
+                        <span class="text">Connexion</span>
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <button class="mobile-menu-btn">☰</button>
+    </div>
+</header>
 <div class="container">
         <div class="reservation-form">
             <h1 class="form-title">Réservation de Trotinette</h1>
@@ -210,10 +288,12 @@ if(!isset($_SESSION['client_id'])) {
                 </div>
             </div>
             
-            <form action="../controllers/ReservationController.php" method="POST">
+            <form action="../../controllers/confirmelocaController.php" method="post" >
+                <input type="hidden" name="idclient" value="<?= $_SESSION['client_id'] ?? '' ?>">
                 <input type="hidden" name="idtrotinette" id="product-id">
                 <input type="hidden" name="tarif" id="tarifInput">
                 <input type="hidden" name="total" id="totalInput">
+                <input type="hidden" name="etat" value="en attente">
                 
                 <div class="form-group">
                     <label for="datereservation" class="form-label">Date de réservation</label>
@@ -248,7 +328,7 @@ if(!isset($_SESSION['client_id'])) {
                 </div>
                 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" id="Btn-submit" class="btn btn-primary">
                         <i class="fas fa-check-circle"></i> Confirmer la réservation
                     </button>
                 </div>
@@ -257,6 +337,75 @@ if(!isset($_SESSION['client_id'])) {
     </div>
     
     <script>
+// Remplacer le code existant par ceci
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdown = document.querySelector('.dropdown');
+
+    if (dropdownToggle && dropdown) {
+        dropdownToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdown.classList.toggle('active');
+        });
+
+        // Fermer le menu quand on clique ailleurs
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    }
+
+    // Gestion du menu mobile
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function() {
+            document.querySelector('.main-nav').classList.toggle('active');
+        });
+    }
+}); const product = getProductFromLocalStorage();
+        if (!product) {
+            alert('Aucun produit sélectionné. Vous allez être redirigé.');
+            window.location.href = '../Controller/TrotinettesrentController.php';
+        }
+        
+        // Écouteur d'événement pour le bouton
+    //    document.getElementById('Btn-submit').addEventListener('click', function() {
+    //     console.log('Button clicked');
+    //         // Vérifier si le produit est sélectionné
+    //         if (!product) {
+    //             alert('Aucun produit sélectionné. Vous allez être redirigé.');
+    //             return;
+    //         }
+
+    //         // fetch('../../controllers/reservecontroller.php', {
+    //         //     method: 'POST',
+    //         //     headers: {
+    //         //         'Content-Type': 'application/json'
+    //         //     },
+    //         //     body: JSON.stringify(product)
+    //         // }).then(response => response.text())
+    //         //      .then(result => {
+    //         //      console.log('Server response:', result);
+    //         //     });
+
+    //         const submitBtn = document.getElementById('submitBtn');
+    //         submitBtn.disabled = true;
+    //         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
+            
+    //         // In a real application, you would send this data to your server
+            
+    //         // Simulate API call
+    //         setTimeout(function() {
+    //             // On success, redirect to confirmation page
+    //             window.location.href = 'ConfirmelocaController.php';
+                
+    //             // In case of error, you would re-enable the button and show an error message
+    //             // submitBtn.disabled = false;
+    //             // submitBtn.innerHTML = 'Poursuivre';
+    //             // alert('Une erreur est survenue. Veuillez réessayer.');
+    //         }, 1500);
+    //     });
         // Récupérer les données du produit depuis le localStorage
         function getProductFromLocalStorage() {
             const productData = localStorage.getItem('selectedProduct');
@@ -272,7 +421,7 @@ if(!isset($_SESSION['client_id'])) {
         
         // Afficher les données du produit
         function displayProductInfo() {
-            const product = getProductFromLocalStorage();
+        //    const product = getProductFromLocalStorage();
             
             if (!product) return;
             
@@ -315,7 +464,9 @@ if(!isset($_SESSION['client_id'])) {
         
         // Formater une date pour datetime-local
         function formatDateTimeLocal(date) {
-            return date.toISOString().slice(0, 16);
+            const offset = date.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(date - offset)).toISOString().slice(0, 16);
+            return localISOTime;
         }
         
         // Calculer la différence en jours entre deux dates
@@ -388,6 +539,11 @@ if(!isset($_SESSION['client_id'])) {
             displayProductInfo();
             initDates();
             
+            // Set the client ID in the hidden field if logged in
+            <?php if (isset($_SESSION['client_id'])): ?>
+                document.querySelector('input[name="idclient"]').value = <?= $_SESSION['client_id'] ?>;
+            <?php endif; ?>
+            
             // Vérifier si on vient de la page de détail avec des données en localStorage
             const fromDetail = localStorage.getItem('fromProductDetail');
             if (fromDetail) {
@@ -395,5 +551,6 @@ if(!isset($_SESSION['client_id'])) {
             }
         });
     </script>
+    
 </body>
 </html>

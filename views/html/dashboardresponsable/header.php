@@ -1,3 +1,6 @@
+<?php
+  session_start(); // à mettre tout en haut du fichier s'il n'y est pas déjà
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +32,9 @@
     .user-action.dropdown.active .dropdown-menu {
         display: block; /* Affiche le menu lorsqu'il est activé */
     }
+        html, body {
+  overflow: hidden;
+}
 </style>
 
 <body>

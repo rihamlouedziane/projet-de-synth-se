@@ -51,6 +51,9 @@ $photo = isset($_SESSION['modele']['photo']) ? $_SESSION['modele']['photo'] : ''
             object-fit: cover;
             border-radius: 5px;
         }
+            html, body {
+  overflow: hidden;
+}
     </style>
 </head>
 <body>
@@ -87,23 +90,41 @@ $photo = isset($_SESSION['modele']['photo']) ? $_SESSION['modele']['photo'] : ''
                 </div>
             </div>
 
-          
-            <div class="row mb-3">
+
+        <div class="row mb-3">
                 <div class="col-md-12">
                     <label for="photo">Photo :</label>
-                    <?php if ($photo): ?>
-                    
-                        <img src="../../../public/uploads/image/<?php echo htmlspecialchars($photo); ?>" class="img-thumbnail" alt="Photo du modèle">
-                    <?php else: ?>
-                        <p>Pas de photo actuelle.</p>
+                    <?php if (!empty($photo)) : ?>
+                        <img src="../../../public/uploads/image/<?= htmlspecialchars($photo) ?>" 
+                             class="img-thumbnail" alt="Photo actuelle">
+                        <input type="hidden" name="existing_photo" 
+                               value="<?= htmlspecialchars($photo) ?>">
+                    <?php else : ?>
+                        <p>Aucune photo actuelle</p>
                     <?php endif; ?>
-                    <input type="file" id="photo" name="photo">
+                    <input type="file" id="photo" name="photo" accept="image/*">
                 </div>
-            </div>
 
             <button type="submit">Mettre à jour</button>
         </form>
     </div>
 </main>
 </body>
+<script>
+// Activer/désactiver les champs requis selon le type de modèle
+document.getElementById('type_modele').addEventListener('change', function() {
+    const isPiece = this.value === 'piece';
+    document.getElementById('puissance').required = !isPiece;
+    document.getElementById('autonomie').required = !isPiece;
+});
+
+// Appliquer au chargement si c'est une pièce
+window.onload = function() {
+    const typeSelect = document.getElementById('type_modele');
+    if (typeSelect.value === 'piece') {
+        document.getElementById('puissance').required = false;
+        document.getElementById('autonomie').required = false;
+    }
+};
+</script>
 </html>
